@@ -2,10 +2,13 @@
 #include <immintrin.h>
 #include <chrono>
 
+
+int size_of_vector = 8;
+
 // function to multiply and add with simple arrays
 void multiply_and_add_array(const float *a, const float *b, const float *c, float *d)
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < size_of_vector; i++)
     {
         d[i] = a[i] * b[i];
         d[i] = d[i] + c[i];
@@ -25,16 +28,20 @@ int main(int n, char **m)
     std::cout << "This is a test programm to compare the multiplication and addition of 8 floats with arrays and vectors." << std::endl;
     
     // create and initilaze arrays and vectors with random numbers
-    float a[8], b[8], c[8], d[8];
+    
+    alignas(32) float a[size_of_vector], b[size_of_vector], c[size_of_vector], d[size_of_vector];
     __m256 vec_a, vec_b, vec_c, vec_d;
     
     std::srand(time(0));
-    for (size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < size_of_vector; i++)
     {
-        a[i] = vec_a[i] = (float) (std::rand()) / (float) (std::rand());
-        b[i] = vec_b[i] = (float) (std::rand()) / (float) (std::rand());
-        c[i] = vec_c[i] = (float) (std::rand()) / (float) (std::rand());
+        a[i] = (float) (std::rand()) / (float) (std::rand());
+        b[i] = (float) (std::rand()) / (float) (std::rand());
+        c[i] = (float) (std::rand()) / (float) (std::rand());
     }
+    vec_a = _mm256_load_ps(a);
+    vec_b = _mm256_load_ps(b);
+    vec_c = _mm256_load_ps(c);
 
     // perform the operations 10000 times and compare the times needed
     auto start = std::chrono::high_resolution_clock::now();
@@ -52,55 +59,15 @@ int main(int n, char **m)
     auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
     // output:
-    /*
-    std::cout << "Array 1:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << a[i] << " ";
-    }
     std::cout << std::endl
-              << "Array 2:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << b[i] << " ";
-    }
-    std::cout << std::endl
-              << "Array 3:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << c[i] << " ";
-    }
-    */
-    std::cout << std::endl
-              << "Result 1:" << std::endl;
-    for (int i = 0; i < 8; i++)
+              << "Result of calculation without vectors:" << std::endl;
+    for (int i = 0; i < size_of_vector; i++)
     {
         std::cout << d[i] << " ";
     }
-    /*
-    std::cout << std::endl << "Second version" << std::endl;
-
-    std::cout << "Array 1:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << vec_a[i] << " ";
-    }
     std::cout << std::endl
-              << "Array 2:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << vec_b[i] << " ";
-    }
-    std::cout << std::endl
-              << "Array 3:" << std::endl;
-    for (int i = 0; i < 8; i++)
-    {
-        std::cout << vec_c[i] << " ";
-    }
-    */
-    std::cout << std::endl
-              << "Result 2:" << std::endl;
-    for (int i = 0; i < 8; i++)
+              << "Result of calculation with vectors:" << std::endl;
+    for (int i = 0; i < size_of_vector; i++)
     {
         std::cout << vec_d[i] << " ";
     }
