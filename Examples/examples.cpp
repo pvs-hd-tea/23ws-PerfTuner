@@ -25,7 +25,7 @@ __m256 multiply_and_add_avx2(__m256 a, __m256 b, __m256 c)
 int main(int n, char **m)
 {
 
-    std::cout << "This is a test programm to compare the multiplication and addition of 8 floats with arrays and vectors." << std::endl;
+    std::cout << "This is a test programm to compare the multiplication and addition of 8 floats with and without AVX2." << std::endl;
     
     // create and initilaze arrays and vectors with random numbers
     
