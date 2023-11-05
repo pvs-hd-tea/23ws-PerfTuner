@@ -1,6 +1,7 @@
 #include <iostream>
 #include <immintrin.h>
 #include <chrono>
+#include <vector>
 
 
 int size_of_vector = 8;
@@ -16,8 +17,8 @@ void multiply_and_add_array(const float *a, const float *b, const float *c, floa
     }
 }
 
-// function to multiply and add with AVX2
-__m256 multiply_and_add_avx2(__m256 a, __m256 b, __m256 c)
+// function to multiply and add with AVX
+__m256 multiply_and_add_avx(__m256 a, __m256 b, __m256 c)
 {
     return _mm256_fmadd_ps(a,b,c);
 }
@@ -33,9 +34,49 @@ void xor_array(const int32_t* a, const int32_t* b, int32_t* c)
 }
 
 // function to perform bitwise logical XOR operation on signed integer AVX vectors
-__m256i xor_vector(const __m256i a, const __m256i b)
+__m256i xor_avx(const __m256i a, const __m256i b)
 {
     return _mm256_xor_si256(a,b);
+}
+
+
+// function to multiply two matricies without AVX
+
+void matrix_mul_array(const std::vector<std::vector<float>> a, const std::vector<std::vector<float>> b, 
+std::vector<std::vector<float>>& c)
+{
+    for (int k=0; k < 8; k++)
+    {
+        for (int j=0; j < 8; j++)
+        {
+            c[k][j] = 0;
+            for (int i=0; i < 8; i++)
+            {
+                c[k][j] = c[k][j] + a[k][i] * b[i][j]; 
+            }
+        }
+    }
+}
+
+// function to multiply two matricies with AVX
+
+void matrix_mul_avx(const std::vector<std::vector<float>> a, const std::vector<std::vector<float>> b, 
+std::vector<std::vector<float>>& c)
+{
+    __m256 vec_a;
+    __m256 vec_b;
+    __m256 vec_c;
+   
+    for (int k=0; k < 8; k++)
+    {
+        for (int j=0; j < 8; j++)
+        {
+            vec_a = _mm256_set_ps(a[k][7],a[k][6],a[k][5],a[k][4],a[k][3],a[k][2],a[k][1],a[k][0]);
+            vec_b = _mm256_set_ps(b[7][j],b[6][j],b[5][j],b[4][j],b[3][j],b[2][j],b[1][j],b[0][j]);
+            vec_c = _mm256_dp_ps(vec_a, vec_b, 0xFF);
+            c[k][j] = vec_c[0]+vec_c[4];
+        }
+    }
 }
 
 
@@ -70,7 +111,7 @@ int main(int n, char **m)
     
     start = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < number_of_runs; i++) {
-        vec_df = multiply_and_add_avx2(vec_af,vec_bf,vec_cf);
+        vec_df = multiply_and_add_avx(vec_af,vec_bf,vec_cf);
     }
     stop = std::chrono::high_resolution_clock::now();
     auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
@@ -79,20 +120,20 @@ int main(int n, char **m)
     std::cout << "Test of multiply and add:" << std::endl;
     
     std::cout << std::endl
-              << "Result of calculation without vectors:" << std::endl;
+              << "Result of calculation without AVX:" << std::endl;
     for (int i = 0; i < size_of_vector; i++)
     {
         std::cout << df[i] << " ";
     }
     std::cout << std::endl
-              << "Result of calculation with vectors:" << std::endl;
+              << "Result of calculation with AVX:" << std::endl;
     for (int i = 0; i < size_of_vector; i++)
     {
         std::cout << vec_df[i] << " ";
     }
     std::cout << std::endl;
-    std::cout << "Time for the first operation: "  << duration1.count() << " microseconds." << std::endl;
-    std::cout << "Time for the second operation: "  << duration2.count() << " microseconds." << std::endl;
+    std::cout << "Time for operation without AVX: "  << duration1.count() << " microseconds." << std::endl;
+    std::cout << "Time for operation with AVX: "  << duration2.count() << " microseconds." << std::endl;
 
 
     // test XOR 
@@ -121,7 +162,7 @@ int main(int n, char **m)
     
     start = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < number_of_runs; i++) {
-        vec_ci = xor_vector(vec_ai,vec_bi);
+        vec_ci = xor_avx(vec_ai,vec_bi);
     }
     stop = std::chrono::high_resolution_clock::now();
     duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
@@ -130,13 +171,13 @@ int main(int n, char **m)
     std::cout << std::endl << std::endl << "Test of xor:" << std::endl;
     
     std::cout << std::endl
-              << "Result of calculation without vectors:" << std::endl;
+              << "Result of calculation without AVX:" << std::endl;
     for (int i = 0; i < size_of_vector; i++)
     {
         std::cout << ci[i] << " ";
     }
     std::cout << std::endl
-              << "Result of calculation with vectors:" << std::endl;
+              << "Result of calculation with AVX:" << std::endl;
     
     
     _mm256_store_si256((__m256i *)ci, vec_ci); //write result to int array
@@ -145,7 +186,71 @@ int main(int n, char **m)
         std::cout << ci[i] << " ";
     }
     std::cout << std::endl;
-    std::cout << "Time for the first operation: "  << duration1.count() << " microseconds." << std::endl;
-    std::cout << "Time for the second operation: "  << duration2.count() << " microseconds." << std::endl;
+    std::cout << "Time for operation without AVX: "  << duration1.count() << " microseconds." << std::endl;
+    std::cout << "Time for operation with AVX: "  << duration2.count() << " microseconds." << std::endl;
+
+
+
+    // test multiplication of matricies
+
+    std::vector<std::vector<float>> a(8,std::vector<float>(8));
+    std::vector<std::vector<float>> b(8,std::vector<float>(8));
+    std::vector<std::vector<float>> c_array(8,std::vector<float>(8));
+    std::vector<std::vector<float>> c_avx(8,std::vector<float>(8));
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            a[i][j] = (float) rand() / (float) rand();
+            b[i][j] = (float) rand() / (float) rand();
+        }
+    }
+
+
+    // perform the operations number_of_runs times and compare the times needed
+    start = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < number_of_runs; i++) {
+        matrix_mul_array(a,b,c_array);
+    }
+    stop = std::chrono::high_resolution_clock::now();
+    duration1 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    
+    start = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < number_of_runs; i++) {
+        matrix_mul_avx(a,b,c_avx);
+    }
+    stop = std::chrono::high_resolution_clock::now();
+    duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+
+    // output:
+    std::cout << std::endl << std::endl << "Test of matrix multiplication:" << std::endl;
+    
+    std::cout << std::endl << "Result of calculation without AVX:" << std::endl;    
+    for (int i=0;i < 8;i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            std::cout << c_array[i][j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    
+    std::cout << std::endl << "Result of calculation with AVX:" << std::endl;
+    for (int i=0;i < 8;i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            std::cout << c_avx[i][j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << "Time for operation without AVX: "  << duration1.count() << " microseconds." << std::endl;
+    std::cout << "Time for operation with AVX: "  << duration2.count() << " microseconds." << std::endl;
 
 }
