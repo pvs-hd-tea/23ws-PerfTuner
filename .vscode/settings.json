@@ -86,5 +86,14 @@
         "typeindex": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "openllm"
+    ],
+    "cSpell.ignoreWords": [
+        "langchain",
+        "llm",
+        "llms"
+    ],
+    "cmake.configureOnOpen": false
 }
