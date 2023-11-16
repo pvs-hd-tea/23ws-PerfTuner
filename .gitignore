@@ -1,1 +1,5 @@
 Examples/examples
+LLM_APIs/node_modules
+LLM_APIs/package-lock.json
+LLM_APIs/package.json
+LLM_APIs/.env
