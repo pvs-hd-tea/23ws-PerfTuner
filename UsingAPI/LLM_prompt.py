@@ -1,6 +1,17 @@
 from datetime import time
+from pathlib import Path
 import openai
 import subprocess
+
+cpp_code = "example.cpp"
+avx_code = "exampleOpt.cpp"
+
+script_dir = Path(__file__).resolve().parent
+file_path = script_dir / cpp_code
+file_in = open(file_path,"r")
+file_path = script_dir / avx_code
+file_out = open(file_path,"w")
+
 
 # Function to compile C++ code
 def compile_cpp(code):
@@ -37,7 +48,7 @@ client = openai.OpenAI()
 # Initial conversation
 conversation = [
     {"role": "system", "content": "You are a code vectorizing machine. You can vectorize c++ code into AVX2 code to create optimized programs."},
-    {"role": "user", "content": "Convert a simple summation program from c++ to AVX2 based code."}
+    {"role": "user", "content": "Convert program from c++ to AVX2 based optimized code."}
 ]
 
 # Maximum number of prompts
