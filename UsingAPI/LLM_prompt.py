@@ -12,6 +12,7 @@ file_in = open(file_path, "r")
 file_path = script_dir / avx_code
 file_out = open(file_path, "w")
 
+prompt = file_in.read()
 
 # Function to compile C++ code
 def compile_cpp(cpp_code):
@@ -48,7 +49,9 @@ client = OpenAI()
 conversation = [
     {"role": "system",
      "content": "You are a code vectorizing machine. You can vectorize c++ code into AVX2 code to create optimized programs."},
-    {"role": "user", "content": "Convert program from c++ to AVX2 based optimized code."}
+    {"role": "user", "content": "Convert program from c++ to AVX2 based optimized code."},
+    {"role": "user", "content": prompt}
+
 ]
 
 # Maximum number of prompts
