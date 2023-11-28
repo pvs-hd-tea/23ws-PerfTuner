@@ -6,7 +6,7 @@ from openai import OpenAI
 
 load_dotenv()
 
-input = "example.cpp"
+input = "example2.cpp"
 output = "exampleOpt.cpp"
 
 script_dir = Path(__file__).resolve().parent
@@ -24,6 +24,10 @@ response = client.chat.completions.create(
     messages=[
     {"role": "system", "content": "You will be given a c++ function. \
      Optimize the function by making use of AVX intrinsics. \
+     Do not assume, that the arrays are aligned. \
+     Do not assume, that the size of the arrays is a multiple of 8. \
+     Use the function _mm256_dp_ps(). \
+     Add _opt to the name of the function. \
      Only give the optimized function. Do not comment the result."},
     {"role": "user", "content": promt}
   ]
