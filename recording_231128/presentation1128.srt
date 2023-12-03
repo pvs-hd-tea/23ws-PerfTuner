@@ -1,0 +1,468 @@
+1
+00:00:00,000 --> 00:00:16,640
+Hello everyone, we are the perf tuner team and our project revolves around we have a
+
+2
+00:00:16,640 --> 00:00:23,920
+C++ function or a program and we have to convert it or optimize it using AVX and of course
+
+3
+00:00:23,920 --> 00:00:31,720
+via LLMs. So the progress for this week is that we have an optimized or a better version
+
+4
+00:00:31,720 --> 00:00:39,120
+of our perf tuner and we have thought about our tree of thoughts. Also we have worked
+
+5
+00:00:39,120 --> 00:00:48,360
+on the Gaussian elimination example by hand. This was the flow chart that we already presented
+
+6
+00:00:49,360 --> 00:00:55,080
+and we have implemented it and we have code ready for it. So it is working but there are
+
+7
+00:00:55,080 --> 00:01:01,080
+still some errors and issues that I still have to rectify and this is the initial prompt
+
+8
+00:01:01,080 --> 00:01:08,200
+that I am putting into the chat GPT API and as we already see there are a lot of specifics
+
+9
+00:01:08,200 --> 00:01:13,760
+that I really had to mention so that it produced proper results and further that we are looking
+
+10
+00:01:13,840 --> 00:01:17,760
+into examples we see that there are a lot of things that we really have to mention for
+
+11
+00:01:17,760 --> 00:01:24,800
+chat GPT to understand the kind of results that we want. This is where I am sort of stuck
+
+12
+00:01:24,800 --> 00:01:34,120
+right now. So as of now it is compiling. The results are compiling in the Python environment
+
+13
+00:01:34,120 --> 00:01:39,240
+which is the C++ program and the program which is vectorized. They are all compiling in the
+
+14
+00:01:39,240 --> 00:01:46,640
+Python environment. However one problem is that we are getting a higher execution time for AVX
+
+15
+00:01:46,640 --> 00:01:53,040
+program in comparison to C++ program and the reason is because in the program we are converting
+
+16
+00:01:53,040 --> 00:01:59,080
+the input data into vectorized form and then doing the processing. So this is taking more time. This
+
+17
+00:01:59,080 --> 00:02:05,200
+is the reason time is more. So I need to figure out a way to actually find out how to find the
+
+18
+00:02:05,200 --> 00:02:07,600
+execution time without this conversion.
+
+19
+00:02:07,600 --> 00:02:37,440
+So that is one thing and the other one is that I am getting the syntax of the command
+
+20
+00:02:37,440 --> 00:02:43,800
+is incorrect. This kind of output which is from the ID not from the script. So I am still figuring
+
+21
+00:02:43,800 --> 00:02:49,560
+out why this is not working because in a G++ environment it is perfectly compiling and giving
+
+22
+00:02:49,560 --> 00:02:58,680
+the results. So this is yet to be found out what is happening here. Yeah and then I like thought
+
+23
+00:02:58,680 --> 00:03:03,920
+a bit more in general because what we tried so far what we had the program and we tried to tell
+
+24
+00:03:04,440 --> 00:03:12,000
+GPT like optimize it using AVX in different ways but that didn't always work perfectly so I
+
+25
+00:03:12,000 --> 00:03:18,760
+tried to think of it bigger and constructed like a tree of thoughts where this is only a subtask
+
+26
+00:03:18,760 --> 00:03:26,520
+and where we have like results that are also good even if this subtask doesn't work and then I first
+
+27
+00:03:26,520 --> 00:03:32,520
+like all this is done by hand first and next week I try to make it like into a program and
+
+28
+00:03:32,520 --> 00:03:39,800
+the first task was if we have a C++ file I asked which subtasks are tackled to see if the program
+
+29
+00:03:39,800 --> 00:03:45,800
+actually can find what we are doing and this worked pretty fine. Actually it could structure
+
+30
+00:03:45,800 --> 00:03:51,680
+what we are doing in every step but there was a minor problem that it also said something like
+
+31
+00:03:51,680 --> 00:03:58,160
+C out or declaring a variable is actually a subtask but then we could ask in another
+
+32
+00:03:58,160 --> 00:04:02,840
+step there actually which subtask can we improve and then he found out that like declaring a
+
+33
+00:04:02,840 --> 00:04:09,320
+variable is not to improvement because it's just a language so he could actually find in like a
+
+34
+00:04:09,320 --> 00:04:14,000
+long file which are the problems that we can actually improve which I think is already pretty
+
+35
+00:04:14,000 --> 00:04:20,360
+interesting and then we could ask him how he would improve them and then he found different ways
+
+36
+00:04:20,360 --> 00:04:25,600
+telling for example numerical stability or storage because I just asked like very widely
+
+37
+00:04:25,600 --> 00:04:32,800
+but also parallelization he found and then we could ask him like how he would do parallelization
+
+38
+00:04:32,800 --> 00:04:39,800
+and then he said either multi-threaded programming or using AVX and this is like the first half of
+
+39
+00:04:39,800 --> 00:04:44,840
+the tree which is just about understanding what is actually the input which are the tasks which
+
+40
+00:04:44,840 --> 00:04:53,000
+we can tackle and how we could improve them and the red is then what like leads to that end what
+
+41
+00:04:53,000 --> 00:05:00,680
+we want yeah well we wouldn't continue a green is where we can actually continue and orange is
+
+42
+00:05:00,680 --> 00:05:06,440
+like potential to continue like if there would be like in I don't know five years if PerfQ
+
+43
+00:05:06,440 --> 00:05:12,200
+is still existing and someone decides to improve storage then he could actually get in there but
+
+44
+00:05:12,240 --> 00:05:18,280
+we will continue with the parallelization path and then the other question was how we can improve
+
+45
+00:05:18,280 --> 00:05:28,280
+it and so far we were always in this like left line that basically trying to tell how to make
+
+46
+00:05:28,280 --> 00:05:32,920
+better code this is like just an example and then also with the dots you see like still not
+
+47
+00:05:32,920 --> 00:05:42,080
+perfectly but then what we also found out when Alexander was doing the Gauss elimination that
+
+48
+00:05:42,080 --> 00:05:49,840
+sometimes just seems impossible telling chat GPT how to actually use AVX in some cases and in the
+
+49
+00:05:49,840 --> 00:05:55,160
+end we were basically telling him what we could write ourselves so that won't be any help but then
+
+50
+00:05:55,160 --> 00:06:00,400
+we thought what we actually still have we have like a solution done by hand and very often in
+
+51
+00:06:00,400 --> 00:06:07,200
+scientific programs there are tasks that occur all the time like transposing a matrix or doing
+
+52
+00:06:07,200 --> 00:06:15,200
+like a matrix vector product or doing a dot product and if we have like a database of 20 years then
+
+53
+00:06:15,200 --> 00:06:21,160
+that sub task and we already know them how to do them by hand and we teach chat GPT like chat GPT
+
+54
+00:06:21,160 --> 00:06:26,640
+gets the sub task we teach them which is the best solution just say like substitute it and if we
+
+55
+00:06:26,640 --> 00:06:31,960
+have like a long file where he does like 20 times dot product and we tell him to substitute it that's
+
+56
+00:06:31,960 --> 00:06:39,120
+already a big help so this could be like the one path that works if we have like a potential for
+
+57
+00:06:39,120 --> 00:06:45,720
+substitution the other case would of course still be to try that chat GPT actually optimizes it
+
+58
+00:06:45,720 --> 00:06:51,880
+himself but could also be that that not worked so in like if we check it and we came to the case
+
+59
+00:06:51,880 --> 00:06:57,520
+that both doesn't work we still have something that we found out that is the parallelization
+
+60
+00:06:57,520 --> 00:07:05,320
+potential because we divided the tasks and found out how we can improve them we found tasks where
+
+61
+00:07:05,320 --> 00:07:10,840
+we can parallelize and where we can use AVX and then if we have like in the worst case a file with
+
+62
+00:07:10,840 --> 00:07:16,520
+300 lines but we tell to the user in this three lines we think you could use AVX even if you don't
+
+63
+00:07:16,520 --> 00:07:23,000
+give the solution he knows where to look which is already a good but if we then actually find a
+
+64
+00:07:23,000 --> 00:07:30,000
+solution we for like every sub task we could try to merge them and give like a better C++ file plus
+
+65
+00:07:30,000 --> 00:07:38,240
+the information for the tasks where it didn't work so we have like three trials to use chat GPT to
+
+66
+00:07:38,240 --> 00:07:45,640
+make better code and hope that like at least some of them will work for some sub tasks and then now
+
+67
+00:07:45,640 --> 00:07:52,000
+where we are like which is still the biggest intellectual problem where we still need to think
+
+68
+00:07:52,000 --> 00:07:59,760
+and it's not just about like implementing it is this line where we try to make chat GPT to better
+
+69
+00:07:59,760 --> 00:08:05,120
+code without having knowledge about the problem and there we like still trying a bit around what
+
+70
+00:08:05,120 --> 00:08:11,360
+works because we want to have like a line of prompting that works for like any or in theory
+
+71
+00:08:11,360 --> 00:08:18,920
+for any problem and this is where we still need to think a bit. That's where I come in I looked at
+
+72
+00:08:18,920 --> 00:08:25,960
+the example from last week from Peter Bastian maybe remember it and I looked at this example
+
+73
+00:08:25,960 --> 00:08:34,080
+more deeply to find the obstacles that chat GPT has to give us a correct code. As a brief recap
+
+74
+00:08:34,080 --> 00:08:39,440
+we have the Gaussian elimination system so you have a system of linear equations and by
+
+75
+00:08:39,440 --> 00:08:47,280
+like step by step eliminating each variable you get the solution for this system of linear
+
+76
+00:08:47,280 --> 00:08:52,440
+equations and you can do this just as you've learned in high school step by step however you
+
+77
+00:08:52,440 --> 00:09:00,120
+can also do this by changing the order of what you add like which rows you add on top of which
+
+78
+00:09:00,120 --> 00:09:08,440
+one and you do this for casual use so you can do it quicker and so I made a sketch of the entire
+
+79
+00:09:08,440 --> 00:09:14,880
+matrix and you divide it up into certain blocks denoted by the black squares and then how you
+
+80
+00:09:14,880 --> 00:09:21,480
+can do it you can first start with the upper left block in the left corner and then you do the next
+
+81
+00:09:21,480 --> 00:09:26,880
+row and then the column. The reason why you do this this way is because you need the result of
+
+82
+00:09:26,920 --> 00:09:34,960
+the first block to be able to do the rest of the row and the block and then you can do the rest of
+
+83
+00:09:34,960 --> 00:09:42,920
+the matrix. So that's behind it let's first look at the upper left block so this code is only
+
+84
+00:09:42,920 --> 00:09:49,800
+responsible for this upper left block here and then you can see the unrolling of the loop you
+
+85
+00:09:49,800 --> 00:09:56,560
+in the very upper loop you have a step size of B which is the size of the block and then you have
+
+86
+00:09:56,560 --> 00:10:02,560
+some other loops and when you come to this line here you can do the actual arithmetics and you
+
+87
+00:10:02,560 --> 00:10:08,520
+can use AVX functions very nicely however there's a problem if you look at this loop actually the
+
+88
+00:10:08,520 --> 00:10:14,760
+times this loop runs changes with K and then actually in the end it might happen that this
+
+89
+00:10:14,760 --> 00:10:22,160
+loop only runs for three times or two times and then you load your elements into the register and
+
+90
+00:10:22,160 --> 00:10:27,280
+load it back then you actually overwrite other elements of the matrix they actually overwrite
+
+91
+00:10:27,280 --> 00:10:33,280
+elements here and this obviously gives you wrong results and Chachapiti is not aware of that at
+
+92
+00:10:33,280 --> 00:10:42,840
+all. I looked at I wanted to optimize it by hand and I'm normally looking at the red square which
+
+93
+00:10:42,840 --> 00:10:49,520
+is the bulk of it and here you actually can do a really nice optimization but also you have to be
+
+94
+00:10:49,520 --> 00:10:55,480
+really careful this is the last so this is the command you want to substitute however there are
+
+95
+00:10:55,480 --> 00:11:00,680
+two problems if you only look at this loop and you want to kind of change the step size here to
+
+96
+00:11:00,680 --> 00:11:07,480
+four to use the AVX intrinsic but there are two problems the first problem is this element stays
+
+97
+00:11:07,480 --> 00:11:14,880
+the same and you add onto this element and there are no such commands intrinsic commands to do that
+
+98
+00:11:14,880 --> 00:11:22,280
+and the second problem is here you change K here works nicely but here you have to change the K
+
+99
+00:11:22,280 --> 00:11:30,300
+but since the way this matrix is stored if I load it only get I can tell them okay load this element
+
+100
+00:11:30,300 --> 00:11:38,640
+and the next three ones in memory but the next three in memory are not the next K one so K plus
+
+101
+00:11:38,640 --> 00:11:44,880
+one K plus two but J plus one J plus two so you look wrote the wrong elements and also Chachapiti
+
+102
+00:11:44,880 --> 00:11:51,400
+is not capable of doing that if you want to do it correctly you actually can see well the loop above
+
+103
+00:11:51,400 --> 00:11:58,080
+it it's possible to change the step size to four then it works nicely then it's no problem and then
+
+104
+00:11:58,080 --> 00:12:04,720
+you can do it and this runs fast and gives the correct results but this I've done by hand then
+
+105
+00:12:04,720 --> 00:12:13,600
+I tried Chachapiti to give me results and I really had to give him very very specific commands which
+
+106
+00:12:13,600 --> 00:12:19,440
+are very specific to this problem and obviously we want a more general approach so that we can
+
+107
+00:12:19,440 --> 00:12:25,800
+not only use this example which we already have and now we are looking maybe at this example another
+
+108
+00:12:25,800 --> 00:12:32,080
+example this is maybe also a question this is connecting to the last question from Thomas that
+
+109
+00:12:32,080 --> 00:12:38,280
+like we really need to figure out what are the obstacles and how can we in a general form tell
+
+110
+00:12:38,280 --> 00:12:45,040
+Chachapiti to tackle these obstacles and yeah it's actually I understand why Chachapiti took so long
+
+111
+00:12:45,040 --> 00:12:50,640
+it also took me quite a while to understand the obstacle what's what's going on here yeah I could
+
+112
+00:12:50,640 --> 00:12:58,800
+it worked when I told him I can change the step size only for the rest matrix only in the J loop
+
+113
+00:12:58,920 --> 00:13:04,280
+and then even gave me a wrong result because he actually moved this command outside of K which
+
+114
+00:13:04,280 --> 00:13:09,440
+couldn't even compile afterwards because K is not known outside the loop I had to tell him move it in
+
+115
+00:13:09,440 --> 00:13:16,080
+the loop and then I got the correct result which is like way too specific but I think if we now look at
+
+116
+00:13:16,080 --> 00:13:23,360
+another example maybe the transpose example we might get a feeling what are in general approach
+
+117
+00:13:23,360 --> 00:13:32,440
+to tackle these obstacles. Let me stop the recording
+

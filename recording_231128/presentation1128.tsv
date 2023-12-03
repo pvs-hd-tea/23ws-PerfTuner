@@ -1,0 +1,118 @@
+start	end	text
+0	16640	Hello everyone, we are the perf tuner team and our project revolves around we have a
+16640	23920	C++ function or a program and we have to convert it or optimize it using AVX and of course
+23920	31720	via LLMs. So the progress for this week is that we have an optimized or a better version
+31720	39120	of our perf tuner and we have thought about our tree of thoughts. Also we have worked
+39120	48360	on the Gaussian elimination example by hand. This was the flow chart that we already presented
+49360	55080	and we have implemented it and we have code ready for it. So it is working but there are
+55080	61080	still some errors and issues that I still have to rectify and this is the initial prompt
+61080	68200	that I am putting into the chat GPT API and as we already see there are a lot of specifics
+68200	73760	that I really had to mention so that it produced proper results and further that we are looking
+73840	77760	into examples we see that there are a lot of things that we really have to mention for
+77760	84800	chat GPT to understand the kind of results that we want. This is where I am sort of stuck
+84800	94120	right now. So as of now it is compiling. The results are compiling in the Python environment
+94120	99240	which is the C++ program and the program which is vectorized. They are all compiling in the
+99240	106640	Python environment. However one problem is that we are getting a higher execution time for AVX
+106640	113040	program in comparison to C++ program and the reason is because in the program we are converting
+113040	119080	the input data into vectorized form and then doing the processing. So this is taking more time. This
+119080	125200	is the reason time is more. So I need to figure out a way to actually find out how to find the
+125200	127600	execution time without this conversion.
+127600	157440	So that is one thing and the other one is that I am getting the syntax of the command
+157440	163800	is incorrect. This kind of output which is from the ID not from the script. So I am still figuring
+163800	169560	out why this is not working because in a G++ environment it is perfectly compiling and giving
+169560	178680	the results. So this is yet to be found out what is happening here. Yeah and then I like thought
+178680	183920	a bit more in general because what we tried so far what we had the program and we tried to tell
+184440	192000	GPT like optimize it using AVX in different ways but that didn't always work perfectly so I
+192000	198760	tried to think of it bigger and constructed like a tree of thoughts where this is only a subtask
+198760	206520	and where we have like results that are also good even if this subtask doesn't work and then I first
+206520	212520	like all this is done by hand first and next week I try to make it like into a program and
+212520	219800	the first task was if we have a C++ file I asked which subtasks are tackled to see if the program
+219800	225800	actually can find what we are doing and this worked pretty fine. Actually it could structure
+225800	231680	what we are doing in every step but there was a minor problem that it also said something like
+231680	238160	C out or declaring a variable is actually a subtask but then we could ask in another
+238160	242840	step there actually which subtask can we improve and then he found out that like declaring a
+242840	249320	variable is not to improvement because it's just a language so he could actually find in like a
+249320	254000	long file which are the problems that we can actually improve which I think is already pretty
+254000	260360	interesting and then we could ask him how he would improve them and then he found different ways
+260360	265600	telling for example numerical stability or storage because I just asked like very widely
+265600	272800	but also parallelization he found and then we could ask him like how he would do parallelization
+272800	279800	and then he said either multi-threaded programming or using AVX and this is like the first half of
+279800	284840	the tree which is just about understanding what is actually the input which are the tasks which
+284840	293000	we can tackle and how we could improve them and the red is then what like leads to that end what
+293000	300680	we want yeah well we wouldn't continue a green is where we can actually continue and orange is
+300680	306440	like potential to continue like if there would be like in I don't know five years if PerfQ
+306440	312200	is still existing and someone decides to improve storage then he could actually get in there but
+312240	318280	we will continue with the parallelization path and then the other question was how we can improve
+318280	328280	it and so far we were always in this like left line that basically trying to tell how to make
+328280	332920	better code this is like just an example and then also with the dots you see like still not
+332920	342080	perfectly but then what we also found out when Alexander was doing the Gauss elimination that
+342080	349840	sometimes just seems impossible telling chat GPT how to actually use AVX in some cases and in the
+349840	355160	end we were basically telling him what we could write ourselves so that won't be any help but then
+355160	360400	we thought what we actually still have we have like a solution done by hand and very often in
+360400	367200	scientific programs there are tasks that occur all the time like transposing a matrix or doing
+367200	375200	like a matrix vector product or doing a dot product and if we have like a database of 20 years then
+375200	381160	that sub task and we already know them how to do them by hand and we teach chat GPT like chat GPT
+381160	386640	gets the sub task we teach them which is the best solution just say like substitute it and if we
+386640	391960	have like a long file where he does like 20 times dot product and we tell him to substitute it that's
+391960	399120	already a big help so this could be like the one path that works if we have like a potential for
+399120	405720	substitution the other case would of course still be to try that chat GPT actually optimizes it
+405720	411880	himself but could also be that that not worked so in like if we check it and we came to the case
+411880	417520	that both doesn't work we still have something that we found out that is the parallelization
+417520	425320	potential because we divided the tasks and found out how we can improve them we found tasks where
+425320	430840	we can parallelize and where we can use AVX and then if we have like in the worst case a file with
+430840	436520	300 lines but we tell to the user in this three lines we think you could use AVX even if you don't
+436520	443000	give the solution he knows where to look which is already a good but if we then actually find a
+443000	450000	solution we for like every sub task we could try to merge them and give like a better C++ file plus
+450000	458240	the information for the tasks where it didn't work so we have like three trials to use chat GPT to
+458240	465640	make better code and hope that like at least some of them will work for some sub tasks and then now
+465640	472000	where we are like which is still the biggest intellectual problem where we still need to think
+472000	479760	and it's not just about like implementing it is this line where we try to make chat GPT to better
+479760	485120	code without having knowledge about the problem and there we like still trying a bit around what
+485120	491360	works because we want to have like a line of prompting that works for like any or in theory
+491360	498920	for any problem and this is where we still need to think a bit. That's where I come in I looked at
+498920	505960	the example from last week from Peter Bastian maybe remember it and I looked at this example
+505960	514080	more deeply to find the obstacles that chat GPT has to give us a correct code. As a brief recap
+514080	519440	we have the Gaussian elimination system so you have a system of linear equations and by
+519440	527280	like step by step eliminating each variable you get the solution for this system of linear
+527280	532440	equations and you can do this just as you've learned in high school step by step however you
+532440	540120	can also do this by changing the order of what you add like which rows you add on top of which
+540120	548440	one and you do this for casual use so you can do it quicker and so I made a sketch of the entire
+548440	554880	matrix and you divide it up into certain blocks denoted by the black squares and then how you
+554880	561480	can do it you can first start with the upper left block in the left corner and then you do the next
+561480	566880	row and then the column. The reason why you do this this way is because you need the result of
+566920	574960	the first block to be able to do the rest of the row and the block and then you can do the rest of
+574960	582920	the matrix. So that's behind it let's first look at the upper left block so this code is only
+582920	589800	responsible for this upper left block here and then you can see the unrolling of the loop you
+589800	596560	in the very upper loop you have a step size of B which is the size of the block and then you have
+596560	602560	some other loops and when you come to this line here you can do the actual arithmetics and you
+602560	608520	can use AVX functions very nicely however there's a problem if you look at this loop actually the
+608520	614760	times this loop runs changes with K and then actually in the end it might happen that this
+614760	622160	loop only runs for three times or two times and then you load your elements into the register and
+622160	627280	load it back then you actually overwrite other elements of the matrix they actually overwrite
+627280	633280	elements here and this obviously gives you wrong results and Chachapiti is not aware of that at
+633280	642840	all. I looked at I wanted to optimize it by hand and I'm normally looking at the red square which
+642840	649520	is the bulk of it and here you actually can do a really nice optimization but also you have to be
+649520	655480	really careful this is the last so this is the command you want to substitute however there are
+655480	660680	two problems if you only look at this loop and you want to kind of change the step size here to
+660680	667480	four to use the AVX intrinsic but there are two problems the first problem is this element stays
+667480	674880	the same and you add onto this element and there are no such commands intrinsic commands to do that
+674880	682280	and the second problem is here you change K here works nicely but here you have to change the K
+682280	690300	but since the way this matrix is stored if I load it only get I can tell them okay load this element
+690300	698640	and the next three ones in memory but the next three in memory are not the next K one so K plus
+698640	704880	one K plus two but J plus one J plus two so you look wrote the wrong elements and also Chachapiti
+704880	711400	is not capable of doing that if you want to do it correctly you actually can see well the loop above
+711400	718080	it it's possible to change the step size to four then it works nicely then it's no problem and then
+718080	724720	you can do it and this runs fast and gives the correct results but this I've done by hand then
+724720	733600	I tried Chachapiti to give me results and I really had to give him very very specific commands which
+733600	739440	are very specific to this problem and obviously we want a more general approach so that we can
+739440	745800	not only use this example which we already have and now we are looking maybe at this example another
+745800	752080	example this is maybe also a question this is connecting to the last question from Thomas that
+752080	758280	like we really need to figure out what are the obstacles and how can we in a general form tell
+758280	765040	Chachapiti to tackle these obstacles and yeah it's actually I understand why Chachapiti took so long
+765040	770640	it also took me quite a while to understand the obstacle what's what's going on here yeah I could
+770640	778800	it worked when I told him I can change the step size only for the rest matrix only in the J loop
+778920	784280	and then even gave me a wrong result because he actually moved this command outside of K which
+784280	789440	couldn't even compile afterwards because K is not known outside the loop I had to tell him move it in
+789440	796080	the loop and then I got the correct result which is like way too specific but I think if we now look at
+796080	803360	another example maybe the transpose example we might get a feeling what are in general approach
+803360	812440	to tackle these obstacles. Let me stop the recording
