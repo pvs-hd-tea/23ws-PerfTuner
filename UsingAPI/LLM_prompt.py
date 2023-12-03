@@ -1,8 +1,11 @@
-import time
-from pathlib import Path
-from openai import OpenAI
 import subprocess
-import os
+import time
+import warnings
+from pathlib import Path
+
+from openai import OpenAI
+
+warnings.filterwarnings("ignore")
 
 cpp_code = "example.cpp"
 avx_code = "exampleOpt.cpp"
@@ -29,29 +32,7 @@ cpp_code_prompt = file_in_cpp.read()
 def compile_cpp(main_code):
     # Compile using a C++ compiler (adjust compiler and flags as needed)
     result = subprocess.run(f"g++ -mavx2 {main_code} -o createFile", shell=True)
-    print(result.returncode.__str__())
-    # subprocess.run(["./createFile"])
     return result
-
-
-# Function to check computational speed
-def check_speed(main_avx, main_cpp):
-    # Measure the execution time of the AVX code
-    avx_execution_time = measure_execution_time(main_avx)
-
-    # Measure the execution time of the compiled C++ code
-    cpp_execution_time = measure_execution_time(main_cpp)
-
-    return avx_execution_time, cpp_execution_time
-
-
-# Function to measure execution time
-def measure_execution_time(command):
-    start_time = time.time()
-    subprocess.run(command, shell=True)
-    end_time = time.time()
-
-    return end_time - start_time
 
 
 # Create an OpenAI client
@@ -109,21 +90,26 @@ for _ in range(max_prompts):
     main_avx = completion_main_cpp.choices[0].message.content
     # print("AVX Code:\n", main_avx)
 
-
     with open(file_out_main_avx.name, 'w') as file:
         file.write(main_avx)
         file.flush()
     # print("Generated Main Code for Original C++:\n", mainavx)
 
     # Compile C++ code using main file
+    start_time = time.time()
     compile_result_cpp = compile_cpp(file_path_main_cpp.__str__())
+    end_time = time.time()
+    cpp_execution_time = end_time - start_time
+
+    start_time = time.time()
     compile_result_avx = compile_cpp(file_path_main_avx.__str__())
+    end_time = time.time()
+    avx_execution_time = end_time - start_time
 
     # Check if compilation was successful
     if compile_result_cpp.returncode == 0 and compile_result_avx.returncode == 0:
         print("Compilation successful.")
         # Check computational speed
-        avx_execution_time, cpp_execution_time = check_speed(main_avx, main_cpp)
         print(f"AVX Execution Time: {avx_execution_time} seconds")
         print(f"C++ Execution Time: {cpp_execution_time} seconds")
 
