@@ -1,9 +1,17 @@
 #include <iostream>
 #include <vector>
 
-int add(int a, int b);
+int add(int a, int b) {
+    return a + b;
+}
 
-void scalar_product_array(const std::vector<float>& a, const std::vector<float>& b, float& c);
+void scalar_product_array(const std::vector<float> a, const std::vector<float> b, float &c) {
+    c = 0;
+    for (size_t i = 0; i < a.size(); i++)
+    {
+        c += a[i] * b[i];
+    }
+}
 
 int main() {
     std::vector<float> a = {1.0, 2.0, 3.0};
@@ -12,14 +20,7 @@ int main() {
     
     scalar_product_array(a, b, c);
     
-    std::cout << c << std::endl;
+    std::cout << "Result: " << c << std::endl;
     
     return 0;
-}
-
-void scalar_product_array(const std::vector<float>& a, const std::vector<float>& b, float& c) {
-    c = 0;
-    for (size_t i = 0; i < a.size(); i++) {
-        c += a[i] * b[i];
-    }
 }
