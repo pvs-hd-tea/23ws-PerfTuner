@@ -1,11 +1,8 @@
 #include <iostream>
 #include <vector>
 
-int add(int a, int b) {
-    return a + b;
-}
-
-void scalar_product_array(const std::vector<float> a, const std::vector<float> b, float &c) {
+void scalar_product_array(const std::vector<float> a, const std::vector<float> b, float &c)
+{
     c = 0;
     for (size_t i = 0; i < a.size(); i++)
     {
@@ -13,14 +10,13 @@ void scalar_product_array(const std::vector<float> a, const std::vector<float> b
     }
 }
 
-int main() {
+int main()
+{
     std::vector<float> a = {1.0, 2.0, 3.0};
     std::vector<float> b = {4.0, 5.0, 6.0};
-    float c;
-    
-    scalar_product_array(a, b, c);
-    
-    std::cout << "Result: " << c << std::endl;
-    
+    float result;
+    scalar_product_array(a, b, result);
+    std::cout << "Result: " << result << std::endl;
+
     return 0;
 }

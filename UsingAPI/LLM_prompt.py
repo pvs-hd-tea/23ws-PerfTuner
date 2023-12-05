@@ -1,4 +1,3 @@
-
 import subprocess
 import time
 import warnings
@@ -97,41 +96,31 @@ for _ in range(max_prompts):
     # print("Generated Main Code for Original C++:\n", mainavx)
 
     # Compile C++ code using main file
-    total_cpp_time = 0.0
-    total_avx_time = 0.0
-    num_compilations = 100
+    start_time = time.time()
+    compile_result_cpp = compile_cpp(file_path_main_cpp.__str__())
+    end_time = time.time()
+    cpp_execution_time = end_time - start_time
 
-    for _ in range(num_compilations):
-        start_time = time.time()
-        compile_result_cpp = compile_cpp(file_path_main_cpp.__str__())
-        end_time = time.time()
-        cpp_execution_time = end_time - start_time
-        total_cpp_time += cpp_execution_time
-
-        start_time = time.time()
-        compile_result_avx = compile_cpp(file_path_main_avx.__str__())
-        end_time = time.time()
-        avx_execution_time = end_time - start_time
-        total_avx_time += avx_execution_time
-
-    average_cpp_time = total_cpp_time / num_compilations
-    average_avx_time = total_avx_time / num_compilations
+    start_time = time.time()
+    compile_result_avx = compile_cpp(file_path_main_avx.__str__())
+    end_time = time.time()
+    avx_execution_time = end_time - start_time
 
     # Check if compilation was successful
     if compile_result_cpp.returncode == 0 and compile_result_avx.returncode == 0:
         print("Compilation successful.")
         # Check computational speed
-        print(f"Average AVX Execution Time: {average_avx_time} seconds")
-        print(f"Average C++ Execution Time: {average_cpp_time} seconds")
+        print(f"AVX Execution Time: {avx_execution_time} seconds")
+        print(f"C++ Execution Time: {cpp_execution_time} seconds")
 
         # Add another prompt if AVX program is slower than C++
-        if average_avx_time >= average_cpp_time:
+        if avx_execution_time >= cpp_execution_time:
             next_prompt = input("The AVX program is slower than C++. Please provide more details: ")
-            conversation2.append({"role": "user", "content": next_prompt})
+            conversation2[-1]["content"] = next_prompt
         else:
             print("AVX program is faster than C++. Exiting.")
             break
     else:
         print("Compilation failed. Please provide more details.")
         next_prompt = input("Additional details: ")
-        conversation2.append({"role": "user", "content": next_prompt})
+        conversation2[-1]["content"] = next_prompt
