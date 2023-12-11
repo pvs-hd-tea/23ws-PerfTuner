@@ -1,0 +1,1 @@
+Yes, the subtask "Validate input" can be parallelized using AVX2.

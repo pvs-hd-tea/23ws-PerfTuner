@@ -1,0 +1,1 @@
+Initializing a matrix can be parallelized using AVX2. AVX2 (Advanced Vector Extensions 2) is an instruction set extension for x86 processors that includes SIMD (Single Instruction, Multiple Data) operations. By using AVX2 instructions, it is possible to perform parallel operations on multiple elements of the matrix simultaneously, improving performance.

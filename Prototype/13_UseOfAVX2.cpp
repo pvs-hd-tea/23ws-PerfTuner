@@ -1,0 +1,1 @@
+Yes, the subtask of reading input can be parallelized using AVX2.

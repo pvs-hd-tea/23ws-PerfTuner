@@ -1,0 +1,1 @@
+Based on the provided information, the given subtask cannot be parallelized using AVX2.
