@@ -48,6 +48,9 @@ result_run_avx = subprocess.run(run_command_avx, shell=True, stdout=subprocess.P
 end_time_avx = time.time()
 runtime_avx = end_time_avx - start_time_avx
 
+
+#TODO: Result may have to be checked at main.cc, need to remove this part if so.
+
 # Check if the outputs are the same
 if result_run_cc.stdout == result_run_avx.stdout:
     print("Outputs are the same.")
