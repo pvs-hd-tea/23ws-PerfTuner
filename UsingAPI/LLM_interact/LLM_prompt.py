@@ -32,6 +32,7 @@ cpp_code_prompt = file_in_cpp.read()
 def compile_cpp(main_code):
     # Compile using a C++ compiler (adjust compiler and flags as needed)
     result = subprocess.run(f"g++ -mavx2 {main_code} -o createFile", shell=True)
+    #TODO: run createfile for 1000 times
     return result
 
 
