@@ -5,10 +5,11 @@
 
 const int n = 48;       // size of matrix
 double A[n*(n + 1)];    // matrix to be solved
+const int B = 12;       // size of blocks
 double x[n];            // final results
 int randNum[n*n];      // random numbers for initializing the matrix
 
-void function(int n, double* A);
+void function(int n, int B, double* A);
 
 
 void solver()  // obtain solution by back substitution method
@@ -80,7 +81,7 @@ int main()
 {
     setRand();
     initialize();
-    function(n,A);
+    function(n,B,A);
     solver();
     display();
     return 0;

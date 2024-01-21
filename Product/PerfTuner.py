@@ -45,7 +45,7 @@ class PerfTuner:
             for j in range (0, self.runs_buildSnippet):
                 
                 # transform by using ChatGPT with a Snippet
-                transformBySnippet(self.function, SnippetList[i])
+                self.function_opt = transformBySnippet(self.function,??? SnippetList[i])
 
                 # test the result and finish if successful
                 if (test(self.function_opt, self.main)):
