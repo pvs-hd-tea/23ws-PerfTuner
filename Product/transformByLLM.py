@@ -25,8 +25,7 @@ def transformByLLM():
              Do not assume, that the size of the arrays is a multiple of 8. \
              Use the function _mm256_dp_ps(). \
              Add _opt to the name of the function. \
-             Only give the optimized function. Do not any comment in the result, just provide code. \
-             Also, provide main function that could execute the vectorized program along with suitable header files and same input data as in C++ code."},
+             Only give the optimized function. Do not any comment in the result, just provide code."},
         {"role": "user", "content": main_cpp}
     ]
 
