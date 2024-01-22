@@ -1,1 +1,1 @@
-There are no more subtasks.
+The subtask is to separate the list elements by commas.

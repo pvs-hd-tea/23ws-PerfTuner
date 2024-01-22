@@ -1,110 +1,126 @@
-# missing:
-# 1. add the database
-# 2. testing: compile, correctness and speed
+# Structure (iteratively advancement): 
+# find the right snippet (multiple runs, voting) [add the database]
+# optimize
+# testing: compile, correctness and speed -> user gives main function(s), one for every subtask
 
 # problems:
-# 1. does not give nothing if requested (maybe better write a python program that gives a number?)
-# 2. Does not onyl return C++-code if asked for better code
-# 3. runtime
+# Does not onyl return C++-code if asked for better code
+# runtime -> less ChatGPT
 
-# ides:
-# 1. multiple SubTasksLists and then taking the shortest to reduce runtime
+# too much yes (solution: multiple runs and all need to be yes)
+# too general explanation (-> too long)
+# needs to give the list in the right format (solution: multiple trials)
+# found subtasks that are not really subtasks (solution: multiple runs and shortest list)
+
+# ideas:
+# 1. multiple SubTaskArrays and then taking the shortest to reduce runtime
+# 2. maximum amount of tokens for checking potential: Yes or No + explanation
+# 3. merging as a later step
+# 4. user gives snippets 
+# 5. optimize, then optimize result
+# 6. maybe voting strategy, instead of first suitable result
 
 from pathlib import Path
 import shutil
+import sys
+import numpy as np
 
 from askChatGPT import askChatGPT
-from Functionality import file_not_empty
 from Functionality import test
+from Functionality import split
 
 class PerfTuner:
     
-    def __init__(self, file_input_name, file_output_name, build_trials=3):
+    def __init__(self, file_input_name, file_output_name, shorterListTrials = 20, build_trials=3):
         self.file_input_name = file_input_name
         self.file_output_name = file_output_name
-        self.file_SubTasks_name = "SubTasks.cpp"
         self.build_trials = build_trials
+        self.shorterListTrials = shorterListTrials
 
     
     def do(self):
-      
+
         # find subtasks
-        askChatGPT([self.file_input_name], self.file_SubTasks_name, 
-                        message={"role": "system", "content": "You will be given C++-code. \
-                                Which subtasks are tackeled? Give me a list!"})
+        SubTaskArrayLength = np.infty
+        runs = 0
+        while(True): # try again if failed + find shorter list for shorter total runtime
+                print(SubTaskArrayLength)
+                try:
+                        SubTaskString = askChatGPT([self.file_input_name], None, 
+                                message={"role": "system", "content": "You will be given C++-code. \
+                                        Which subtasks are tackled? Give me a list! "})
+                        
+                        SubTaskArray_temp = split(SubTaskString)
+
+                        if(len(SubTaskArray_temp) < SubTaskArrayLength):
+                                SubTaskArray = SubTaskArray_temp
+                                SubTaskArrayLength = len(SubTaskArray)
+                        
+                        runs += 1
+                        if(runs >= self.shorterListTrials):
+                               break
+                
+                except Exception as e:
+                        print(f"error: {e}")
         
-        # do a copy of the subtasks to use as stack
-        script_dir = Path(__file__).resolve().parent
-        file_path_src = script_dir / self.file_SubTasks_name
-        file_path_dest = script_dir / "SubTasksStack.cpp"
-        shutil.copy2(file_path_src, file_path_dest)
+        SubTaskNumber = len(SubTaskArray)
         
-        SubTask_counter = 0
-        potential = []
-        while(file_not_empty("SubTasksStack.cpp")):
+        potential = [False for i in range(SubTaskNumber)]
+        explanation = ["" for i in range(SubTaskNumber)]
+        
+        for i in range(SubTaskNumber):
             
-                SubTask_counter += 1
-                print(SubTask_counter)
-                SubTask_counter_string = str(SubTask_counter)
-
                 # find improvable subtasks/use of AVX2
-                askChatGPT(["SubTasksStack.cpp"], SubTask_counter_string + "_improvableSubTask.cpp", 
-                        message={"role": "system", "content": "You will be given a list of subtasks from a C++-code. \
-                                Tell me if the first subtask can be parallelized? \
-                                If that cannot be done, give me nothing."})
+                answer = askChatGPT(None, None, 
+                        message={"role": "system", "content": "You have the following subtask from a C++-code:" 
+                                + SubTaskArray[i] + 
+                                "Tell me if the subtask can be parallelized? \
+                                Answer with Yes or No and explain afterwards"})
                 
-                askChatGPT([SubTask_counter_string + "_improvableSubTask.cpp"], SubTask_counter_string + "_UseOfAVX2.cpp", 
-                        message={"role": "system", "content": "You will be given a subtask that can be parallized or nothing. \
-                                If you reveived nothing, give me nothing. \
-                                If you did receive something, tell me if the given subtask can be parallelized using AVX2? \
-                                If that cannot be done, give me nothing."})
-                
-                # shorten list of subtasks
-                askChatGPT(["SubTasksStack.cpp"], "SubTasksStack.cpp", 
-                        message={"role": "system", "content": "You will be given a list of subtasks from a C++-code. \
-                                Shorten this list by the first subtask and give me the new list.\
-                                If that is also the only subtask, give me nothing."})
-                
-                # check if we can use AVX and if it's worth to proceed
-                if(file_not_empty(SubTask_counter_string + "_UseOfAVX2.cpp")):
-                        potential.append(True)
-                else:
-                        potential.append(False)
-                        
-                        script_dir = Path(__file__).resolve().parent
-                        # construct file if not already existing
-                        file_path = script_dir / SubTask_counter_string + "_betterCode.cpp"
-                        open(file_path, "w") # save better code as an empty file
-                                
-                        break
-                
-                # multiple improvement trials:
-                for i in range(self.build_trials):
-                        # build algorithm to construct better code
-                        askChatGPT([SubTask_counter_string + "_UseOfAVX2.cpp"], SubTask_counter_string + "_improvementsInSubTask.cpp", 
-                                message={"role": "system", "content": "You will be given a subtask that can be parallelized using AVX2. \
-                                        Tell me how to improve the subtask using AVX2."})
+                if "Yes" in answer:
+                       potential[i] = True
+                       explanation[i] = answer
 
-                        # do algorithm to construct better code
-                        askChatGPT([SubTask_counter_string + "_improvementsInSubTask.cpp"], SubTask_counter_string + "_betterCode.cpp", 
-                                message={"role": "system", "content": "You will be given a C++ file and an algorithm to use AVX2 on one of its subtasks. \
-                                        Optimize the function by making use of AVX intrinsics such that the time complexity is reduced. \
-                                        Do not assume, that the arrays are aligned. \
-                                        Do not assume, that the size of the arrays is a multiple of 8. \
-                                        Use the function _mm256_dp_ps(). \
-                                        Add _opt to the name of the function. \
-                                        Only give the optimized function. Do not any comment in the result, just provide code. \
-                                        Also, provide main function that could execute the vectorized program along with suitable header files and same input data as in C++ code."})
+        # output
+        for i in range(SubTaskNumber):
+                print("SubTask", i, ":", SubTaskArray[i])
+                print("potential : ", potential[i])
+                print()
+                print("explanation : ", explanation[i])
+                print("-------------------------------------------------------------------------------------------------------------------------")
+                
+                                
+        
+
+        sys.exit()
+                
+        # multiple improvement trials:
+        for i in range(self.build_trials):
+                # build algorithm to construct better code
+                askChatGPT([SubTask_counter_string + "_UseOfAVX2.cpp"], SubTask_counter_string + "_improvementsInSubTask.cpp", 
+                        message={"role": "system", "content": "You will be given a subtask that can be parallelized using AVX2. \
+                                Tell me how to improve the subtask using AVX2."})
+
+                # do algorithm to construct better code
+                askChatGPT([SubTask_counter_string + "_improvementsInSubTask.cpp"], SubTask_counter_string + "_betterCode.cpp", 
+                        message={"role": "system", "content": "You will be given a C++ file and an algorithm to use AVX2 on one of its subtasks. \
+                                Optimize the function by making use of AVX intrinsics such that the time complexity is reduced. \
+                                Do not assume, that the arrays are aligned. \
+                                Do not assume, that the size of the arrays is a multiple of 8. \
+                                Use the function _mm256_dp_ps(). \
+                                Add _opt to the name of the function. \
+                                Only give the optimized function. Do not any comment in the result, just provide code. \
+                                Also, provide main function that could execute the vectorized program along with suitable header files and same input data as in C++ code."})
                         
-                        # break if working code is already obtained before the maximum number of build trials
-                        if(test(SubTask_counter_string + "_betterCode.cpp")):
-                                break
-                        # empty file as better code if the solution is not working
-                        else:
-                                script_dir = Path(__file__).resolve().parent
-                                file_path = script_dir / SubTask_counter_string + "_betterCode.cpp"
-                                with open(file_path, "w") as file_out:
-                                        file_out.write() # save better code as an empty file
+                # break if working code is already obtained before the maximum number of build trials
+                if(test(SubTask_counter_string + "_betterCode.cpp")):
+                        break
+                # empty file as better code if the solution is not working
+                else:
+                        script_dir = Path(__file__).resolve().parent
+                        file_path = script_dir / SubTask_counter_string + "_betterCode.cpp"
+                        with open(file_path, "w") as file_out:
+                                file_out.write() # save better code as an empty file
 
         # output
         print("parallelization potential:")

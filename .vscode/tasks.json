@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-mavx2",
-                "-march=native",
+                "-march=haswell",
                 "-g",
                 "${file}",
                 "-o",
