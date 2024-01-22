@@ -23,7 +23,7 @@ else:
     exit(1)  # Exit if compilation fails
 
 # Run the g++ command to compile the AVX code
-command = f"g++ -mavx2 {main_file} {function_opt} -o {output_file_avx}"
+command = f"g++ -march=haswell {main_file} {function_opt} -o {output_file_avx}"
 result = subprocess.run(command, shell=True)
 
 # Check if the compilation was successful
