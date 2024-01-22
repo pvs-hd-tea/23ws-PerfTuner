@@ -4,3 +4,5 @@ LLM_APIs/package-lock.json
 LLM_APIs/package.json
 LLM_APIs/.env
 Prototype/.env
+Product/.env
+.gitignore
