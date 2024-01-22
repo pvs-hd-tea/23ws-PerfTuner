@@ -1,8 +1,26 @@
-def transformBySnippet(function, snippet, snippet_opt):
+def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath):
     from dotenv import load_dotenv
     from pathlib import Path
     from openai import OpenAI
 
+    with open(function_filepath, "r") as datei:
+        function = datei.read()
+    print("- The function is:")
+    print(function)
+    print("")
+
+    with open(snippet_filepath, "r") as datei:
+        snippet = datei.read()
+    print("- The snippet is:")
+    print(snippet)
+    print("")
+
+    with open(snippet_opt_filepath, "r") as datei:
+        snippet_opt = datei.read()
+    print("- The snippet_opt is:")
+    print(snippet_opt)
+    print("")
+           
     load_dotenv()
     client = OpenAI()
     
@@ -63,5 +81,9 @@ def transformBySnippet(function, snippet, snippet_opt):
     )
 
     generated_text4 = response.choices[0].message.content
+
+    print("- The function_opt is:")
+    print(generated_text4)
+    print("")
     
     return generated_text4

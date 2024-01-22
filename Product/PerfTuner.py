@@ -1,18 +1,25 @@
-from transformByLLM import transformByLLM
+from pathlib import Path
+
+#from transformByLLM import transformByLLM
 from findSnippetList import findSnippetList
 from transformBySnippet import transformBySnippet
-from transformByGoogle import transformByGoogle
+#from transformByGoogle import transformByGoogle
 from test import test
 
 class PerfTuner:
     
-    def __init__(self, function, function_opt, main, runs_directLLM=5, runs_useSnippet=5, runs_buildSnippet=5, runs_Google=5, runs_useUserSnippet=5, runs_buildUserSnippet=5, library = "Snippets/library.cc"):
+    def __init__(self, subpath, runs_directLLM=5, runs_useSnippet=1, runs_buildSnippet=5, runs_Google=5, runs_useUserSnippet=5, runs_buildUserSnippet=5):
         
-        # input files, output file, library fily
-        self.function = function
-        self.function_opt = function_opt
-        self.main = main
-        self.library = library
+        # input files, output file, library file
+        self.script_dir = Path(__file__).resolve().parent
+        files_path = self.script_dir / subpath
+        
+        self.function_filepath = files_path / "function.cc"
+        self.function_opt_filepath = files_path / "function_opt.cc"
+        self.main_filepath = files_path / "main.cc"
+        self.library_filepath = self.script_dir / "Snippets" / "library.cc"
+        self.output_filepath = files_path / "output_cc"
+        self.output_avx_filepath = files_path / "output_avx"
         
         # run limits
         self.runs_directLLM = runs_directLLM
@@ -24,53 +31,73 @@ class PerfTuner:
 
         self.runs_useUserSnippet = runs_useUserSnippet
         self.runs_buildUserSnippet = runs_buildUserSnippet
+        
     
     def do(self):
 
         # 1. run (direct LLM)
-        for i in range (0, self.runs_directLLM):
+        #for i in range (0, self.runs_directLLM):
             
             # transform by using ChatGPT directly
-            transformByLLM(self.function)
+        #    transformByLLM(self.function)
 
             # test the result and finish if successful
-            if (test(self.function_opt, self.main)):
-                return [0, 1, i] # [success, 1. run, ith build]
+        #    if (test(self.function_opt, self.main)):
+        #        return [0, 1, i] # [success, 1. run, ith build]
 
         # construct the voted snippet list
-        SnippetList = findSnippetList(self.function, self.library)   
+        SnippetList = -1
+        while SnippetList == -1:
+            SnippetList = findSnippetList(self.function_filepath, self.library_filepath)   
         
         # 2. run (use library)
-        for i in range (0, self.runs_useSnippet): 
+        for i in range (0, self.runs_useSnippet):
+
+            snippet_filepath = self.script_dir / "Snippets" / SnippetList[i][0]
+            snippet_opt_filepath = self.script_dir / "Snippets" / SnippetList[i][1]
+            
             for j in range (0, self.runs_buildSnippet):
+                print("# A transformation by snippet try has been started:")
+                print("- using the snippets:" + str(SnippetList[i]))
+                print("- it's the following try using these snippets: " + str(j))
+                print("")
                 
                 # transform by using ChatGPT with a Snippet
-                self.function_opt = transformBySnippet(self.function,??? SnippetList[i])
+                output = transformBySnippet(str(self.function_filepath), snippet_filepath, snippet_opt_filepath)
+                with open(self.function_opt_filepath, "w") as file_out:
+                    file_out.write(output)
 
                 # test the result and finish if successful
-                if (test(self.function_opt, self.main)):
+                print("# The result is being tested:")
+                print("")
+                if (test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)==0):
+                    print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath))
                     return [0, 2, i, j]
+                else:
+                    print("THE TRANSFORMATION HAS FAILED.")
+                    print("")
+
             
 
         # 3. run (use Google)
-        for i in range (0, self.runs_Google):
-            
-            # transform by using ChatGPT directly
-            transformByGoogle(self.function)
+        #for i in range (0, self.runs_Google):
+        #    
+        #    # transform by using ChatGPT directly
+        #    transformByGoogle(self.function)
 
             # test the result and finish if successful
-            if (test(self.function_opt, self.main)):
-                return [0, 3, i]
+        #    if (test(self.function_opt, self.main)):
+        #        return [0, 3, i]
             
         # 4. run (use user snippet)
-        for i in range (0, self.runs_useUserSnippet): 
-            for j in range (0, self.runs_buildUserSnippet):
+        #for i in range (0, self.runs_useUserSnippet): 
+        #    for j in range (0, self.runs_buildUserSnippet):
                 
                 # transform by using ChatGPT with a Snippet
-                transformBySnippet(self.function, userSnippet)
+        #        transformBySnippet(self.function, userSnippet)
 
                 # test the result and finish if successful
-                if (test(self.function_opt, self.main)):
-                    return [0, 4, i, j]
+        #        if (test(self.function_opt, self.main)):
+        #            return [0, 4, i, j]
                 
         return 1

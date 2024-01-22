@@ -1,39 +1,120 @@
 from PerfTuner import PerfTuner
 
-## Class 1 ##
-problems = 1
-solved = 0
+print("----------------------------------------------------------------------------------------")
+print("Welcome to the automatic evaluation loop of PerfTuner!")
+print("This evaluation loop will try to make different programs faster using AVX2 by calling ChatGPT via meta-strategies.")
+print("Let's see what happens.")
+print("----------------------------------------------------------------------------------------")
+print("")
+
+### Class 1 ###
+print("--- Class 1 problems ---")
+print("")
+
+problems_Class1 = 0
+solved_Class1 = 0
 
 # Scalarproduct
-perfTuner = PerfTuner("Problems/Class1/Scalarproduct/function.cc", "Problems/Class1/Scalarproduct/function_opt.cc", "Problems/Class1/Scalarproduct/main.cc")
-if perfTuner.do() != 1:
-    solved += 1
+problems_Class1 += 1
+print("a. Scalarproduct:")
+print("")
 
-# Output
-print ("Class 1: " + str(solved)/str(problems))
+perfTuner = PerfTuner("Problems/Class1/Scalarproduct")
 
+# Output (Scalarproduct)
+statistics_array = perfTuner.do()
+if statistics_array != 1:
+    solved_Class1 += 1
+    print("SOLVED")
+    print("")
+else:
+    print("FAIL")
+    print("")
 
-## Class 2 ##
-problems = 2
-solved = 0
+# MatrixMultiplication
+problems_Class1 += 1
+print("b. MatrixMultiplication:")
+print("")
+
+perfTuner = PerfTuner("Problems/Class1/MatrixMultiplication")
+
+# Output (MatrixMultiplication)
+statistics_array = perfTuner.do()
+if statistics_array != 1:
+    solved_Class1 += 1
+    print("SOLVED")
+    print("")
+else:
+    print("FAIL")
+    print("")
+
+### Class 2 ###
+print("--- Class 2 problems ---")
+print("")
+
+problems_Class2 = 0
+solved_Class2 = 0
 
 # LU1
-perfTuner = PerfTuner("Problems/Class1/LU1/function.cc", "Problems/Class1/LU1/function_opt.cc", "Problems/Class1/LU1/main.cc")
-if perfTuner.do() != 1:
-    solved += 1
+problems_Class2 += 1
+print("a. LU1:")
+print("")
+
+perfTuner = PerfTuner("Problems/Class2/LU1")
+
+# Output (LU1)
+statistics_array = perfTuner.do()
+if statistics_array != 1:
+    solved_Class2 += 1
+    print("SOLVED")
+    print("")
+else:
+    print("FAIL")
+    print("")
 
 # Transpose
-perfTuner = PerfTuner("Problems/Class1/Transpose/function.cc", "Problems/Class1/Transpose/function_opt.cc", "Problems/Class1/Transpose/main.cc")
-if perfTuner.do() != 1:
-    solved += 1
+problems_Class2 += 1
+print("b. MatrixMultiplication:")
+print("")
+
+perfTuner = PerfTuner("Problems/Class2/Transpose")
+
+# Output (Transpose)
+statistics_array = perfTuner.do()
+if statistics_array != 1:
+    solved_Class2 += 1
+    print("SOLVED")
+    print("")
+else:
+    print("FAIL")
+    print("")
+
+### Class 3 ###
+print("--- Class 3 problems ---")
+print("")
+
+problems_Class3 = 0
+solved_Class3 = 0
+
+# LU3
+problems_Class3 += 1
+print("a. LU3:")
+print("")
+
+perfTuner = PerfTuner("Problems/Class3/LU3")
+
+# Output (LU3)
+statistics_array = perfTuner.do()
+if statistics_array != 1:
+    solved_Class3 += 1
+    print("SOLVED")
+    print("")
+else:
+    print("FAIL")
+    print("")
 
 # Output
-print ("Class 2: " + str(solved)/str(problems))
+print ("Class 1: " + str(solved_Class1) + " / " + str(problems_Class1))
+print ("Class 2: " + str(solved_Class2) + " / " + str(problems_Class2))
+print ("Class 3: " + str(solved_Class3) + " / " + str(problems_Class3))
 
-
-## Class 3 ##
-problems = 0
-solved = 0
-
-# Output
-print ("Class 3: " + str(solved)/str(problems))

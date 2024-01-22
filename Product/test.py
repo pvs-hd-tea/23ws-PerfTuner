@@ -2,38 +2,43 @@ import subprocess
 import warnings
 import time
 
-def test():
+def test(main_file, function_file, output_file, function_opt, output_file_avx):
     warnings.filterwarnings("ignore")
-    # Specify the file names
-    main_file = "main.cc"
-    function_file = "function.cc"
-    output_file = "output_cc"
-    function_opt = "function_opt.cc"
-    output_file_avx = "output_avx"
+    
+    # Specify the file names (done by the arguments of the function)
+    #main_file = "main.cc"
+    #function_file = "function.cc"
+    #output_file = "output_cc"
+    #function_opt = "function_opt.cc"
+    #output_file_avx = "output_avx"
 
     # Run the g++ command to compile the C++ code
+    print("# g++ main.cc function.cc:")
     command = f"g++ {main_file} {function_file} -o {output_file}"
     result = subprocess.run(command, shell=True)
 
     # Check if the compilation was successful
     if result.returncode == 0:
-        print("C++ function: TRUE")
+        print("- compilation successful")
+        print("")
     else:
-        print("C++ function:FALSE \nPlease check your C++ code.")
         print(result.stderr)
-        exit(1)  # Exit if compilation fails
+        print("")
+        return -1  
 
     # Run the g++ command to compile the AVX code
+    print("# g++ main.cc function_opt.cc:")
     command = f"g++ -mavx2 {main_file} {function_opt} -o {output_file_avx}"
     result = subprocess.run(command, shell=True)
 
     # Check if the compilation was successful
     if result.returncode == 0:
-        print("AVX function: TRUE")
+        print("- compilation successful")
+        print("")
     else:
-        print("AVX function: FALSE \nPlease check your AVX code.")
         print(result.stderr)
-        exit(1)  # Exit if compilation fails
+        print("")
+        return -1
 
     # Measure the runtime of the C++ code
     start_time_cc = time.time()
@@ -68,4 +73,5 @@ def test():
         print("AVX code has a lower runtime.")
     else:
         print("Both programs have the same runtime.")
-    return -1
+    
+    return 0
