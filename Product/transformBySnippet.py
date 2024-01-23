@@ -89,8 +89,5 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     print("- The function_opt is:")
     print(output2[0])
     print("")
-
-    
-
     
     return output2[0]
