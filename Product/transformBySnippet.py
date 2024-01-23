@@ -82,8 +82,15 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
 
     generated_text4 = response.choices[0].message.content
 
+    output1 = generated_text4.split("```cpp")
+    output2 = output1[1].split("```")
+
+
     print("- The function_opt is:")
-    print(generated_text4)
+    print(output2[0])
     print("")
+
     
-    return generated_text4
+
+    
+    return output2[0]
