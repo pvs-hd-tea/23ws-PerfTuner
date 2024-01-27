@@ -76,18 +76,31 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
         {"role": "user", "content": "Explain your work."},
         {"role": "assistant", "content": generated_text1},
         {"role": "user", "content": "Optimize the relevant subtasks of the original function \
-        using your explanation of your work with the snippet."},
+        using your explanation of your work with the snippet. Do not change the name of the function. \
+         Mark the start of the code with: ```cpp and the end with ```"},
         ]
     )
 
     generated_text4 = response.choices[0].message.content
 
-    output1 = generated_text4.split("```cpp")
-    output2 = output1[1].split("```")
-
-
     print("- The function_opt is:")
-    print(output2[0])
-    print("")
+
+    try:
+        output1 = generated_text4.split("```cpp")
+
+        if (len(output1) > 1): 
+            output2 = output1[1].split("```")
+            print(output2[0])
+            print("")
+            return output2[0]
+        else:
+            print(output1[0])
+            print("")
+            return output1[0]
     
-    return output2[0]
+    
+    except:
+        print("The code could not be extracted from the answer from chGPT.")
+        return("")
+
+   
