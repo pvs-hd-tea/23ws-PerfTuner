@@ -1,8 +1,11 @@
 from askChatGPT import askChatGPT
 import re
 from Functionality import split
+from dotenv import load_dotenv
 
 def findSnippetList(function, library):
+
+    load_dotenv()
     
     print("# A snippet list is under construction using:")
     print("- " + str(function))
