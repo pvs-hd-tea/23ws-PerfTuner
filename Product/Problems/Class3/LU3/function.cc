@@ -1,3 +1,4 @@
+#include <immintrin.h>
 void function(int n, int B, double* A)
 {
   for (int K = 0; K < n; K += B) // K-blocks

@@ -1,3 +1,4 @@
+#include <immintrin.h>
 void function(int n, double *a, double *b, double &c)
 {
     c = 0;

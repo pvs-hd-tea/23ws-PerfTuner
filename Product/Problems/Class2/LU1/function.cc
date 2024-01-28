@@ -1,3 +1,4 @@
+#include <immintrin.h>
 void function(int n, double* A)
 {
   for (int k = 0; k < n; k += 1)

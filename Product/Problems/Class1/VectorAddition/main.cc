@@ -4,8 +4,9 @@
 
 const int n = 48;         // size of matrix
 double A[n],B[n];         // vectors 1 and 2
+double C[n];              // resulting vector
 
-void function(int n, double *a, double *b, double &c);
+void function(int n, double *a, double *b, double *c);
 
 
 void initialize() // set vectors
@@ -18,12 +19,20 @@ void initialize() // set vectors
     }
 }
 
+void display()
+{
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << C[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
 
 int main()
 {
-    double c;
     initialize();
-    function(n,A,B,c);
-    std::cout << c;
+    function(n,A,B,C);
+    display();
     return 0;
 }

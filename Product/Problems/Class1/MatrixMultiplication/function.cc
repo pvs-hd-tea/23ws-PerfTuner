@@ -1,3 +1,4 @@
+#include <immintrin.h>
 void function(int row1, int col1, int col2, double *a, double *b, double *c)
 {
     for (int k = 0; k < row1; k++)

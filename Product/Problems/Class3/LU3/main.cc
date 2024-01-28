@@ -1,4 +1,3 @@
-#include <immintrin.h>
 #include <cmath>
 #include <random>
 #include <iostream>

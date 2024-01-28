@@ -1,3 +1,4 @@
+#include <immintrin.h>
 void function(int n, int M, double *A, double *B)
 {
   for (int i = 0; i < n; i += M)   // split i loop in blocks of size M
