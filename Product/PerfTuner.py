@@ -1,6 +1,6 @@
 from pathlib import Path
 
-#from transformByLLM import transformByLLM
+from transformByLLM import transformByLLM
 from findSnippetList import findSnippetList
 from transformBySnippet import transformBySnippet
 #from transformByGoogle import transformByGoogle
@@ -8,7 +8,7 @@ from test import test
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_directLLM=5, runs_useSnippet=1, runs_buildSnippet=5, runs_Google=5, runs_useUserSnippet=5, runs_buildUserSnippet=5):
+    def __init__(self, subpath, runs_directLLM=3, runs_useSnippet=2, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=5, runs_buildUserSnippet=5):
         
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent
@@ -34,16 +34,34 @@ class PerfTuner:
         
     
     def do(self):
+        
+        error = -3
+        last_error_change = "-"
 
         # 1. run (direct LLM)
-        #for i in range (0, self.runs_directLLM):
+        for i in range (0, self.runs_directLLM):
+            print("# A transformation by direct LLM try has been started:")
+            print("- it's the following try of this approach: " + str(i))
+            print("")
             
             # transform by using ChatGPT directly
-        #    transformByLLM(self.function)
+            output = transformByLLM(self.function_filepath)
+            with open(self.function_opt_filepath, "w") as file_out:
+                file_out.write(output)
 
             # test the result and finish if successful
-        #    if (test(self.function_opt, self.main)):
-        #        return [0, 1, i] # [success, 1. run, ith build]
+            print("# The result is being tested:")
+            print("")
+            test_result = test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)
+            if(test_result==0):
+                print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath))
+                return [0, 1, i, "-"] # [success, 1. run, ith build]
+            else:
+                print("THE TRANSFORMATION HAS FAILED.")
+                print("")
+                if(test_result>error):
+                    error = test_result
+                    last_error_change = 1
 
         # construct the voted snippet list
         SnippetList = -1
@@ -70,12 +88,16 @@ class PerfTuner:
                 # test the result and finish if successful
                 print("# The result is being tested:")
                 print("")
-                if (test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)==0):
+                test_result = test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)
+                if(test_result==0):
                     print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath))
                     return [0, 2, i, j]
                 else:
                     print("THE TRANSFORMATION HAS FAILED.")
                     print("")
+                    if(test_result>error):
+                        error = test_result
+                        last_error_change = 2
 
             
 
@@ -100,4 +122,4 @@ class PerfTuner:
         #        if (test(self.function_opt, self.main)):
         #            return [0, 4, i, j]
                 
-        return 1
+        return [-1, last_error_change, error, "-"]

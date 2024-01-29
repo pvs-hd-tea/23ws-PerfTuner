@@ -100,7 +100,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     
     
     except:
-        print("The code could not be extracted from the answer from chGPT.")
+        print("The code could not be extracted from the answer from chatGPT.")
         return("")
 
    

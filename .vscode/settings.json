@@ -110,7 +110,8 @@
     "cSpell.ignoreWords": [
         "langchain",
         "llm",
-        "llms"
+        "llms",
+        "ylabel"
     ],
     "cmake.configureOnOpen": false
 }

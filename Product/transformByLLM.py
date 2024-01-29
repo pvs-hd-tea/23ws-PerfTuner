@@ -2,17 +2,14 @@ import warnings
 from pathlib import Path
 from openai import OpenAI
 
-def transformByLLM():
+def transformByLLM(function_filepath):
     warnings.filterwarnings("ignore")
 
-    main_cpp = "main_c++.cpp"
-    output_avx = "output_avx.cpp"
-
-    script_dir = Path(__file__).resolve().parent
-
-    file_path_main_avx = script_dir / output_avx
-    file_out_main_avx = open(file_path_main_avx, "w")
-
+    with open(function_filepath, "r") as file:
+        function = file.read()
+    print("- The function is:")
+    print(function)
+    print("")
 
     # Create an OpenAI client
     client = OpenAI()
@@ -26,7 +23,7 @@ def transformByLLM():
              Use the function _mm256_dp_ps(). \
              Add _opt to the name of the function. \
              Only give the optimized function. Do not any comment in the result, just provide code."},
-        {"role": "user", "content": main_cpp}
+        {"role": "user", "content": function}
     ]
 
 
@@ -38,11 +35,10 @@ def transformByLLM():
     )
 
     # Extract the model's reply for main code
-    output_avx = completion_avx.choices[0].message.content
+    output = completion_avx.choices[0].message.content
 
-    # Write AVX code to file
-    with open(file_out_main_avx.name, 'w') as file:
-        file.write(output_avx)
-        file.flush()
-
-    return -1
+    print("- The function_opt is:")
+    print(output)
+    print("")
+    
+    return output
