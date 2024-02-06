@@ -2,8 +2,8 @@
 #include <random>
 #include <iostream>
 
-const int n = 24; // number of rows of matrix A
-const int m = 8;  // number of columns of matrix A and number of rows of vector B
+const int n = 26; // number of rows of matrix A
+const int m = 10;  // number of columns of matrix A and number of rows of vector B
 double A[n * m];  // matrix A
 double B[m];      // vector B
 double C[n];      // resulting vector

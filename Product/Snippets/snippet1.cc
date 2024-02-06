@@ -1,3 +1,3 @@
-t /= l;
+A[s] /= A[p];
 for (int i = lower; i < upper; i += 1)
-  A[j][i] -= t * A[c][i];
+  A[m+i] -= A[s] * A[n+i];        

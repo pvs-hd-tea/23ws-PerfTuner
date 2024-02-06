@@ -1,3 +1,4 @@
+#include <immintrin.h>
 for (int ii=0; ii<8; ii+=4){
         for (int jj=0; jj<8; jj+=4){
           int b_start = i+ii + n*(j+jj);

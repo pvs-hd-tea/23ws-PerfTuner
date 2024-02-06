@@ -2,9 +2,9 @@
 #include <random>
 #include <iostream>
 
-const int n = 24;          // number of rows of matrix A
-const int m = 8;           // number of columns of matrix A and number of rows of matrix B
-const int k = 12;          // number of columns of matrix B
+const int n = 26;          // number of rows of matrix A
+const int m = 10;          // number of columns of matrix A and number of rows of matrix B
+const int k = 10;          // number of columns of matrix B
 double A[n * m], B[m * k]; // matrices A and B
 double C[n * k];           // destination matrix and copy
 

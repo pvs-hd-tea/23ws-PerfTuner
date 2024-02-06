@@ -2,7 +2,7 @@
 #include <random>
 #include <iostream>
 
-const int n = 48;         // size of matrix
+const int n = 50;         // size of matrix
 double a;                 // scalar
 double B[n];              // vector
 double C[n];              // resulting vector
