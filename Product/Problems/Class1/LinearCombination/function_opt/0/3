@@ -1,0 +1,23 @@
+
+#include <immintrin.h>
+
+void function(int n, double a, double *b, double c, double *d, double *e)
+{
+    int vec_size = 4;
+    __m256d vec1, vec2, factor;
+    double t = a * c;
+    factor = _mm256_set1_pd(t);
+
+    for (int i = 0; i < n - vec_size; i += vec_size)
+    {
+        vec1 = _mm256_loadu_pd(&b[i]);
+        vec2 = _mm256_loadu_pd(&d[i]);
+        vec2 = _mm256_fmadd_pd(vec1, factor, vec2);
+        _mm256_storeu_pd(&e[i], vec2);
+    }
+
+    for (int i = n - (n % vec_size); i < n; i++)
+    {
+        e[i] = a * b[i] + c * d[i];
+    }
+}

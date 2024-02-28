@@ -1,0 +1,21 @@
+
+#include <immintrin.h>
+
+void function(int n, double a, double *b, double c, double *d, double *e)
+{
+    __m256d avx_a = _mm256_set1_pd(a);
+    __m256d avx_c = _mm256_set1_pd(c);
+
+    for (int i = 0; i < n; i += 4)
+    {
+        __m256d avx_b = _mm256_loadu_pd(&b[i]);
+        __m256d avx_d = _mm256_loadu_pd(&d[i]);
+
+        __m256d mul_b = _mm256_mul_pd(avx_a, avx_b);
+        __m256d mul_d = _mm256_mul_pd(avx_c, avx_d);
+
+        __m256d result = _mm256_add_pd(mul_b, mul_d);
+
+        _mm256_storeu_pd(&e[i], result);
+    }
+}

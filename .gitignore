@@ -6,3 +6,4 @@ LLM_APIs/.env
 Prototype/.env
 Product/.env
 .gitignore
+.exe
