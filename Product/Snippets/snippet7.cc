@@ -1,3 +1,4 @@
-for (int i = lower1; i < lower1 + M; i++)
-    for (int j = lower2; j < lower2 + M; j++)
-        B[j * n + i] = A[i * n + j];  // perform desired permutation
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] ^ B[i];            // perform the desired calculation
+}

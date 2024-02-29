@@ -82,14 +82,98 @@ for (; i <= n - vec_size; i += vec_size)     // head loop (optimized using AVX)
 for (; i < n; i += 1)  // handle the remaining elements
     c[i] = a[i] / b[i];  // perform the desired calculation
 
-snippet5: // multiplication of complex numbers
+snippet5: // bitwise AND 
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] & B[i];            // perform the desired calculation
+}
+
+snippet5_opt:
+#include <immintrin.h>
+__m256i vec1,vec2;  // define variables only once outside the loop
+int vec_size = 8;   // since the AVX register can hold 8 integers
+int i = 0;
+for (; i <= n - vec_size; i += vec_size)     // head loop (optimized using AVX)
+{
+    vec1 = _mm256_loadu_si256((__m256i*) &A[i]);   // load necessary values in a vector
+    vec2 = _mm256_loadu_si256((__m256i*) &B[i]);   // load necessary values in a vector
+    vec2 = _mm256_and_si256(vec1,vec2);            // perform the desired calculation
+    _mm256_storeu_si256((__m256i*)&C[i],vec2);     // store the result into the array
+}
+for (; i < n; i += 1)  // handle the remaining elements
+    C[i] = A[i] & B[i];  // perform the desired calculation
+
+snippet6: // bitwise OR
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] | B[i];            // perform the desired calculation
+}
+
+snippet6_opt:
+#include <immintrin.h>
+__m256i vec1,vec2;  // define variables only once outside the loop
+int vec_size = 8;   // since the AVX register can hold 8 integers
+int i = 0;
+for (; i <= n - vec_size; i += vec_size)     // head loop (optimized using AVX)
+{
+    vec1 = _mm256_loadu_si256((__m256i*) &A[i]);   // load necessary values in a vector
+    vec2 = _mm256_loadu_si256((__m256i*) &B[i]);   // load necessary values in a vector
+    vec2 = _mm256_or_si256(vec1,vec2);            // perform the desired calculation
+    _mm256_storeu_si256((__m256i*)&C[i],vec2);     // store the result into the array
+}
+for (; i < n; i += 1)  // handle the remaining elements
+    C[i] = A[i] | B[i];  // perform the desired calculation
+
+snippet7: // bitwise XOR
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] ^ B[i];            // perform the desired calculation
+}
+
+snippet7_opt:
+#include <immintrin.h>
+__m256i vec1,vec2;  // define variables only once outside the loop
+int vec_size = 8;   // since the AVX register can hold 8 integers
+int i = 0;
+for (; i <= n - vec_size; i += vec_size)     // head loop (optimized using AVX)
+{
+    vec1 = _mm256_loadu_si256((__m256i*) &A[i]);   // load necessary values in a vector
+    vec2 = _mm256_loadu_si256((__m256i*) &B[i]);   // load necessary values in a vector
+    vec2 = _mm256_xor_si256(vec1,vec2);            // perform the desired calculation
+    _mm256_storeu_si256((__m256i*)&C[i],vec2);     // store the result into the array
+}
+for (; i < n; i += 1)  // handle the remaining elements
+    C[i] = A[i] ^ B[i];  // perform the desired calculation
+
+snippet8: // bitwise AND NOT
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] & ~ B[i];            // perform the desired calculation
+}
+
+snippet8_opt:
+#include <immintrin.h>
+__m256i vec1,vec2;  // define variables only once outside the loop
+int vec_size = 8;   // since the AVX register can hold 8 integers
+int i = 0;
+for (; i <= n - vec_size; i += vec_size)     // head loop (optimized using AVX)
+{
+    vec1 = _mm256_loadu_si256((__m256i*) &A[i]);   // load necessary values in a vector
+    vec2 = _mm256_loadu_si256((__m256i*) &B[i]);   // load necessary values in a vector
+    vec2 = _mm256_andnot_si256(vec1,vec2);            // perform the desired calculation
+    _mm256_storeu_si256((__m256i*)&C[i],vec2);     // store the result into the array
+}
+for (; i < n; i += 1)  // handle the remaining elements
+    C[i] = A[i] & ~ B[i];  // perform the desired calculation
+
+snippet9: // multiplication of complex numbers
 for (int i = 0; i < n; i+=2)
 {
     c[i] = a[i]*b[i] - a[i+1]*b[i+1];    // calculate the real part
     c[i+1] = a[i]*b[i+1] + a[i+1]*b[i];  // calculate the imaginary part
 }
 
-snippet5_opt:
+snippet9_opt:
 #include <immintrin.h>
 int vec_size = 4;                      // vec_sice = 4 since the AVX can hold 4 double values
 __m256d vec1, vec2, ayx, byy, p1, bxx; // define variables only once outside the loop
@@ -114,12 +198,12 @@ for (; i < n; i += 2) // handle the remaining elements
     c[i+1] = a[i]*b[i+1] + a[i+1]*b[i];  // calculate the imaginary part
 }
 
-snippet6: // LU decomposition
+snippet10: // LU decomposition
 A[s] /= A[p];
 for (int i = lower; i < upper; i += 1)
   A[m+i] -= A[s] * A[n+i];   // perform the desired calculation
 
-snippet6_opt:
+snippet10_opt:
 #include <immintrin.h>
 int vec_size = 4; // vec_sice = 4 since the AVX can hold 4 double values
 __m256d vec1,vec2,factor; // define variables only once outside the loop
@@ -136,12 +220,12 @@ for (; i <= upper - vec_size; i += vec_size) // head loop (optimized using AVX)
 for (; i < upper; i += 1) // handle the remaining elements
   A[m+i] -= A[s] * A[n+i];  // perform the desired calculation
 
-snippet7: // matrix transposition
+snippet11: // matrix transposition
 for (int i = lower1; i < lower1 + M; i++)
     for (int j = lower2; j < lower2 + M; j++)
         B[j * n + i] = A[i * n + j];  // perform desired permutation
 
-snippet7_opt:
+snippet11_opt:
 #include <immintrin.h>
 int vec_size = 4; // vec_sice = 4 since the AVX can hold 4 double values
 int A_start, B_start;

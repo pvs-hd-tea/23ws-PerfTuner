@@ -1,3 +1,4 @@
-A[s] /= A[p];
-for (int i = lower; i < upper; i += 1)
-  A[m+i] -= A[s] * A[n+i];   // perform the desired calculation
+for (int i = 0; i < n; i++)
+{
+    C[i] = A[i] | B[i];            // perform the desired calculation
+}
