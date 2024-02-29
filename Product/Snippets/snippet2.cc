@@ -1,3 +1,4 @@
-for (int ii = i; ii < i + M; ii++)
-    for (int jj = j; jj < j + M; jj++)
-        B[jj * n + ii] = A[ii * n + jj];
+for (int i = 0; i < n; i++)
+{
+    c[i] = a[i] - b[i];  // perform the desired calculation
+}
