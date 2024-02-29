@@ -4,7 +4,7 @@ __m256d vec1, vec2, ayx, byy, p1, bxx; // define variables only once outside the
 int i = 0;
 for (; i <= n - vec_size; i += vec_size) // head loop (optimized using AVX)
 {
-    // load necessary values vectors
+    // load necessary values to vectors
     vec1 = _mm256_loadu_pd(&a[i]);
     vec2 = _mm256_loadu_pd(&b[i]);
     // prepare temporary vectors
