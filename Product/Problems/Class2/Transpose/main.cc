@@ -18,7 +18,11 @@ void initialize()
 void display()
 {
     for (int i = 0; i < n * n; i++)
+    {
+        if (i%n == 0 && i != 0) std::cout << std::endl;
         std::cout << B[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 

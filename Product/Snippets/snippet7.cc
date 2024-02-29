@@ -1,3 +1,3 @@
-for (int ii = i; ii < i + M; ii++)
-    for (int jj = j; jj < j + M; jj++)
-        B[jj * n + ii] = A[ii * n + jj];  // perform desired permutation
+for (int i = lower1; i < lower1 + M; i++)
+    for (int j = lower2; j < lower2 + M; j++)
+        B[j * n + i] = A[i * n + j];  // perform desired permutation
