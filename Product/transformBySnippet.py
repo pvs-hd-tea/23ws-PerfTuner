@@ -5,21 +5,21 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
 
     with open(function_filepath, "r") as datei:
         function = datei.read()
-    print("- The function is:")
-    print(function)
-    print("")
+    #print("- The function is:")
+    #print(function)
+    #print("")
 
     with open(snippet_filepath, "r") as datei:
         snippet = datei.read()
-    print("- The snippet is:")
-    print(snippet)
-    print("")
+    #print("- The snippet is:")
+    #print(snippet)
+    #print("")
 
     with open(snippet_opt_filepath, "r") as datei:
         snippet_opt = datei.read()
-    print("- The snippet_opt is:")
-    print(snippet_opt)
-    print("")
+    #print("- The snippet_opt is:")
+    #print(snippet_opt)
+    #print("")
            
     load_dotenv()
     client = OpenAI()
@@ -83,19 +83,19 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
 
     generated_text4 = response.choices[0].message.content
 
-    print("- The function_opt is:")
+    #print("- The function_opt is:")
 
     try:
         output1 = generated_text4.split("```cpp")
 
         if (len(output1) > 1): 
             output2 = output1[1].split("```")
-            print(output2[0])
-            print("")
+            #print(output2[0])
+            #print("")
             return output2[0]
         else:
-            print(output1[0])
-            print("")
+            #print(output1[0])
+            #print("")
             return output1[0]
     
     

@@ -1,5 +1,7 @@
 from pathlib import Path
 import multiprocessing
+from multiprocessing import Array
+import math
 
 from transformByLLM import transformByLLM
 from findSnippetList import findSnippetList
@@ -7,6 +9,7 @@ from transformBySnippet import transformBySnippet
 #from transformByGoogle import transformByGoogle
 from test import test
 from TaskCode import TaskCode
+from Controll import Controll
 
 class PerfTuner:
     
@@ -69,13 +72,16 @@ class PerfTuner:
         SnippetList = -1
         while SnippetList == -1:
             SnippetList = findSnippetList(self.function_filepath, self.library_filepath)   
-        
-        
+                
         # 2. run (use library)
         print("# A transformation by snippet try has been started:")
         print("")
 
         Jobs = []
+        jobsStatusArray = Array('i', range(self.runs_useSnippet*self.runs_buildSnippet)) # shared memory: status array
+        for i in range(len(jobsStatusArray)):
+            jobsStatusArray[i] = 0
+
         for i in range (0, self.runs_useSnippet):
             for j in range (0, self.runs_buildSnippet):
                 job = multiprocessing.Process(target=TaskCode, args=(i, j, 
@@ -85,14 +91,37 @@ class PerfTuner:
                                                                     self.main_filepath, 
                                                                     self.function_filepath, 
                                                                     self.output_filepath / str(i) / str(j),
-                                                                    self.output_avx_filepath / str(i) / str(j)))
+                                                                    self.output_avx_filepath / str(i) / str(j),
+                                                                    jobsStatusArray, self.runs_useSnippet))
                 Jobs.append(job)
-            
+
+        controller = multiprocessing.Process(target= Controll, args=(Jobs, jobsStatusArray))
+        
+        controller.start()
         for job in Jobs:
             job.start()
                 
-        for job in Jobs:
+        for job in Jobs: 
             job.join()
+        controller.kill()
+        controller.join()
+
+        for index in range(len(jobsStatusArray)):
+            if jobsStatusArray[index] == 1:
+                i_success = math.floor(index/self.runs_buildSnippet)
+                j_success = index - i_success*self.runs_buildSnippet
+                
+                print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath) + " / " + str(i_success) + " / " + str(j_success) + ".cc")
+                print("")
+                print(jobsStatusArray)
+                print("")
+                return [0, 2, i_success, j_success]
+        else:
+            print("THE TRANSFORMATION HAS FAILED.")
+            print("")
+            #if(test_result>error):
+             #error = test_result
+            # last_error_change = 2
 
    
 

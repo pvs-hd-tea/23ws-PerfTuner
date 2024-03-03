@@ -28,11 +28,12 @@ def find_largest_number(input_string):
 
 def split(SubTaskString):
         SubTaskNumber = find_largest_number(SubTaskString)
-        
+        print(SubTaskNumber)
+
         initial_split = SubTaskString.split("1. ")
         SubTaskArray = [initial_split[1]]
 
-        for splitter in range (2, SubTaskNumber+1):
+        for splitter in range (2, SubTaskNumber):
                 splitting = SubTaskArray.pop().split(str(splitter)+". ")
                         
                 SubTaskArray.append(splitting[0])
@@ -43,9 +44,3 @@ def split(SubTaskString):
         return SubTaskArray
        
                
-
-
-
-# ToDo
-def test(file_name):
-        return True

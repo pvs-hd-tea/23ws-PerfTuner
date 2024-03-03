@@ -59,7 +59,7 @@ def main():
                 print("")
 
         RESULT.append([class_name, str(solved) + " / " + str(numberOfProblemsInClass)])
-
+    
     ## Output ##
     print("RESULT")
     for x in RESULT:

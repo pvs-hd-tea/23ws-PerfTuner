@@ -6,4 +6,11 @@ LLM_APIs/.env
 Prototype/.env
 Product/.env
 .gitignore
-.exe
+*.gitignore
+*.exe
+function_opt/
+output_avx/
+output_cc/
+function_opt.cc
+output_avx.exe
+output_cc.exe
