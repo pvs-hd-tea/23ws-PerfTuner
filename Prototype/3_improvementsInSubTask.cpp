@@ -1,5 +1,0 @@
-Actually, printing the status of the matrix can still benefit from AVX2 parallelization. While generating or performing calculations on the matrix may not need parallelization, the process of printing the matrix can be optimized using AVX2 instructions.
-
-AVX2 can be utilized to efficiently pack multiple elements into a single register and process them simultaneously. This can be applied to the process of printing the matrix, where multiple elements can be packed into a single AVX2 register and then printed in parallel using AVX2 instructions.
-
-By parallelizing the printing process, we can reduce the number of instructions executed and improve the overall performance of the printing operation. This can be especially beneficial for large matrices where the number of elements to print is significant.

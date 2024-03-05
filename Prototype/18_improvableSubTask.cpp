@@ -1,1 +1,0 @@
-Yes, the first subtask "Validate input" can potentially be parallelized.

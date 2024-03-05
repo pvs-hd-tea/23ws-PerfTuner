@@ -1,1 +1,0 @@
-Yes, the subtask "2. Process data" can potentially be parallelized using AVX2 instructions.

@@ -1,1 +1,0 @@
-Yes, the first subtask in the new list ("Process data") can potentially be parallelized.

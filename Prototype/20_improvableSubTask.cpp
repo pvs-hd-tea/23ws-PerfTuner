@@ -1,1 +1,0 @@
-Based on the given list, the first subtask "2. Process data" can potentially be parallelized.

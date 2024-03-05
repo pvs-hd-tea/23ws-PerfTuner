@@ -1,1 +1,0 @@
-The subtask "Display output" cannot be parallelized.

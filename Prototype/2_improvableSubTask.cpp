@@ -1,1 +1,0 @@
-The first subtask "Adding two integers" cannot be parallelized since it is a sequential operation that does not involve any parallelizable computations or data dependencies.

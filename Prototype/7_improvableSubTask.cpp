@@ -1,1 +1,0 @@
-No, printing the status of the matrix cannot be parallelized as it involves accessing and printing the elements sequentially.

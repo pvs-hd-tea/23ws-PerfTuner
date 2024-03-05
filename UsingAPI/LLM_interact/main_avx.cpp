@@ -1,1 +1,0 @@
-I see that you have provided code for a simple sum function and the main function to read two numbers from the user and calculate their sum. However, the task was to optimize a C++ function using AVX intrinsics. Could you please provide the code for the function that needs to be optimized?
