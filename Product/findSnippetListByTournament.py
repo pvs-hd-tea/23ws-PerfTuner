@@ -38,7 +38,7 @@ def findSnippetListByTournament(function, library):
     contenders += newContenders
     newContenders = list()
 
-    # do tournament untill final 4:
+    # do tournament until final 4:
     while (len(contenders) > 4):
         while (len(contenders) > 1):
             contender1 = random.choice(contenders)
