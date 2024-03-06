@@ -152,10 +152,12 @@ def tournament(function,library,snippet1, snippet2):
 
             if(result == 1):
                 winner = snippet1
+                looser = snippet2
             else:
                 winner = snippet2
+                looser = snippet1
 
-            print("Snippet" + str(winner) + " won the battle.")
+            print("Snippet" + str(winner) + " won the battle against Snippet" + str(looser) + ".")
             
             return winner
         
