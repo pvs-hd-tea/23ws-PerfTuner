@@ -1,8 +1,15 @@
+import time
+
 def Controll(Jobs, jobsStatusArray):
 
     while True:
-        for status in jobsStatusArray:
-            if status == 1:
+        for a in jobsStatusArray:
+            if a[0] == 0: # there is a successful process
                 for job in Jobs:
-                    job.kill()
+                    if job != None:
+                        try:
+                            job.kill()
+                            print("KILL")
+                        except:
+                            pass
 

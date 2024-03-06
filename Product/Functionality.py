@@ -28,7 +28,8 @@ def find_largest_number(input_string):
 
 def split(SubTaskString):
         SubTaskNumber = find_largest_number(SubTaskString)
-        print(SubTaskNumber)
+        print("(list of length: " + str(SubTaskNumber) + ")")
+        print("")
 
         initial_split = SubTaskString.split("1. ")
         SubTaskArray = [initial_split[1]]

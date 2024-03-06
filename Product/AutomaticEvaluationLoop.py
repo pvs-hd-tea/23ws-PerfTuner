@@ -484,19 +484,34 @@ def main():
 
     classes = {
         "Class1": [
-            "LinearCombination",
-            "MatrixMultiplication",
-            "MatrixVectorMultiplication",
-            "ScalarMultiplication",
-            "Scalarproduct",
-            "VectorAddition"
+            "BitwiseAND/version1",
+
+            "LinearCombination/version1",
+            "LinearCombination/version2",
+
+            "MatrixMultiplication/version1",
+            "MatrixMultiplication/version2",
+            "MatrixMultiplication/version3",
+            
+            "MatrixVectorMultiplication/version1",
+            
+            "ScalarMultiplication/version1",
+            
+            "Scalarproduct/version1",
+            "Scalarproduct/version2",
+            "Scalarproduct/version3",
+
+            "VectorAddition/version1"
         ],
         "Class2": [
-            "LU1",
-            "Transpose"
+            "BitwiseLogicCombined/version1"
+            
+            "LU1/version1",
+
+            "Transpose/version1"
         ],
         "Class3": [
-            "LU3"
+            "LU3/version1"
         ]
     }
 
