@@ -181,7 +181,7 @@ class PerfTuner:
                     if(runtime_avx < best_time):
                         best_time = runtime_avx
                         runtime_cc_compared = runtime_cc
-                        best_snippet
+                        best_snippet = snippet
                         numberInList = i
                         buildTrial = j
                     print("- SUCCESS: A working optimized function can be found in " + str(self.function_opt_filepath) + " / " + str(i) + " / " + str(j) + ".cc")
