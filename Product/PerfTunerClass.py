@@ -4,13 +4,11 @@ import math
 import numpy as np
 import os
 
-from transformByLLM import transformByLLM
 from findSnippetList import findSnippetList
 from findSnippetListByTournament import findSnippetListByTournament
 from transformBySnippet import transformBySnippet
 from test import test
 from TaskCode import TaskCode
-from Controll import Controll
 
 class PerfTuner:
     
@@ -83,16 +81,13 @@ class PerfTuner:
                                                                     jobsStatusArray, self.runs_buildSnippet))
                 Jobs.append(job)
 
-        # controller = multiprocessing.Process(target= Controll, args=(Jobs, jobsStatusArray))
-        
-        # controller.start()
+       
         for job in Jobs:
             job.start()
                 
         for job in Jobs: 
             job.join()
-        # controller.kill()
-        # controller.join()
+        
 
         # output
         print("# Statistics of the transformation:")
