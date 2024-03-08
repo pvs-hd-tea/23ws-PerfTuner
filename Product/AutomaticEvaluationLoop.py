@@ -49,7 +49,7 @@ def main():
             "VectorAddition/version1"
         ],
         "Class2": [
-            "BitwiseLogicCombined/version1"
+            "BitwiseLogicCombined/version1",
             
             "LU1/version1",
 
