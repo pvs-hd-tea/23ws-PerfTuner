@@ -39,7 +39,7 @@ def test(main_file, function_file, output_file, function_opt, output_file_avx):
     runtime_avx = end_time_avx - start_time_avx
    
     # Check if the outputs are the same
-    if result_run_cc.stdout == result_run_avx.stdout:
+    if result_run_cc.stdout != result_run_avx.stdout:
         return [-2, -99, -99]
 
     # Compare the runtime
