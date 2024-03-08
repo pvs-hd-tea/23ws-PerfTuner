@@ -26,14 +26,14 @@ def test(main_file, function_file, output_file, function_opt, output_file_avx):
 
     # Measure the runtime of the C++ code
     start_time_cc = time.time()
-    run_command_cc = f"{output_file}" if os.name == "nt" else f".\\{output_file}" # different for Windows
+    run_command_cc = f"{output_file}" if os.name == "nt" else f"\\{output_file}" # different for Windows
     result_run_cc = subprocess.run(run_command_cc, shell=True, stdout=subprocess.PIPE, text=True)
     end_time_cc = time.time()
     runtime_cc = end_time_cc - start_time_cc
     
     # Measure the runtime of the AVX code
     start_time_avx = time.time()
-    run_command_avx = f"{output_file_avx}" if os.name == "nt" else f".\\{output_file_avx}" # different for Windows
+    run_command_avx = f"{output_file_avx}" if os.name == "nt" else f"\\{output_file_avx}" # different for Windows
     result_run_avx = subprocess.run(run_command_avx, shell=True, stdout=subprocess.PIPE, text=True)
     end_time_avx = time.time()
     runtime_avx = end_time_avx - start_time_avx
