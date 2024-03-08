@@ -2,6 +2,7 @@ from pathlib import Path
 import multiprocessing
 import math
 import numpy as np
+import subprocess
 import os
 
 from findSnippetList import findSnippetList
@@ -12,7 +13,7 @@ from TaskCode import TaskCode
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_useSnippet=2, runs_buildSnippet=7, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
+    def __init__(self, subpath, runs_useSnippet=2, runs_buildSnippet=7, runs_useUserSnippet=0, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
         
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent
@@ -26,8 +27,8 @@ class PerfTuner:
         self.output_avx_filepath = files_path / "output_avx"
         
         # run limits
-        self.runs_useSnippet = runs_useSnippet
-        self.runs_buildSnippet = runs_buildSnippet
+        self.runs_useSnippet = int(runs_useSnippet)
+        self.runs_buildSnippet = int(runs_buildSnippet)
 
         self.runs_useUserSnippet = runs_useUserSnippet
         self.runs_buildUserSnippet = runs_buildUserSnippet
@@ -168,6 +169,11 @@ class PerfTuner:
         else: successRate = 99
         
         print("=> transformation quality average: " + str(transformationQualityAverage) + ", success rate: " + str(successRate)) 
-        print("") 
+        print("")
+
+        if (best_snippet != ""):
+            print("The best transformation can be found in the file function_opt.cc")
+            command = "this needs to be added for Windows!!!" if os.name == "nt" else "cp " + str(self.function_opt_filepath) + "/" + str(numberInList) + "/" + str(buildTrial) + ".cc function_opt.cc" 
+            result = subprocess.run(command, shell=True)
         
         return[max(best_results), numberInList, best_snippet, buildTrial, best_time, runtime_cc_compared, best_results, transformationQualityAverage, successRate]
