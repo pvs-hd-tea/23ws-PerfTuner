@@ -14,7 +14,7 @@ from Controll import Controll
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=4, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
+    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=2, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
         
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent

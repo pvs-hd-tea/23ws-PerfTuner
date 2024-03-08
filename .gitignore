@@ -1,14 +1,3 @@
-Examples/examples
-LLM_APIs/node_modules
-LLM_APIs/package-lock.json
-LLM_APIs/package.json
-LLM_APIs/.env
-Prototype/.env
-Product/.env
-
-.gitignore
-*.gitignore
-.vscode/
 __pycache__/
 *.exe
 function_opt/
@@ -17,3 +6,5 @@ output_cc/
 function_opt.cc
 output_avx.exe
 output_cc.exe
+.gitignore
+
