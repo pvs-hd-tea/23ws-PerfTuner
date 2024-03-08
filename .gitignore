@@ -5,8 +5,11 @@ LLM_APIs/package.json
 LLM_APIs/.env
 Prototype/.env
 Product/.env
+
 .gitignore
 *.gitignore
+.vscode/
+__pycache__/
 *.exe
 function_opt/
 output_avx/

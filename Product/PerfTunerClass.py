@@ -14,7 +14,7 @@ from Controll import Controll
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=2, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=5, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
+    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=4, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
         
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent
@@ -112,16 +112,16 @@ class PerfTuner:
                                                                     jobsStatusArray, self.runs_buildSnippet))
                 Jobs.append(job)
 
-        controller = multiprocessing.Process(target= Controll, args=(Jobs, jobsStatusArray))
+        # controller = multiprocessing.Process(target= Controll, args=(Jobs, jobsStatusArray))
         
-        controller.start()
+        # controller.start()
         for job in Jobs:
             job.start()
                 
         for job in Jobs: 
             job.join()
-        controller.kill()
-        controller.join()
+        # controller.kill()
+        # controller.join()
 
         # output
         print("# Statistics of the transformation:")
