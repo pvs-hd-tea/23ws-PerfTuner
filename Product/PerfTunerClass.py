@@ -14,7 +14,7 @@ from Controll import Controll
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=2, runs_buildSnippet=7, runs_Google=5, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
+    def __init__(self, subpath, runs_useSnippet=2, runs_buildSnippet=7, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
         
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent
@@ -28,12 +28,8 @@ class PerfTuner:
         self.output_avx_filepath = files_path / "output_avx"
         
         # run limits
-        self.runs_directLLM = runs_directLLM
-        
         self.runs_useSnippet = runs_useSnippet
         self.runs_buildSnippet = runs_buildSnippet
-
-        self.runs_Google = runs_Google
 
         self.runs_useUserSnippet = runs_useUserSnippet
         self.runs_buildUserSnippet = runs_buildUserSnippet
@@ -46,31 +42,6 @@ class PerfTuner:
         
         error = -3
         last_error_change = "-"
-
-        # 1. run (direct LLM)
-        for i in range (0, self.runs_directLLM):
-            print("# A transformation by direct LLM try has been started:")
-            print("- it's the following try of this approach: " + str(i))
-            print("")
-            
-            # transform by using ChatGPT directly
-            output = transformByLLM(self.function_filepath)
-            with open(self.function_opt_filepath, "w") as file_out:
-                file_out.write(output)
-
-            # test the result and finish if successful
-            print("# The result is being tested:")
-            print("")
-            test_result = test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)
-            if(test_result==0):
-                print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath))
-                return [0, 1, i, "-"] # [success, 1. run, ith build]
-            else:
-                print("THE TRANSFORMATION HAS FAILED.")
-                print("")
-                if(test_result>error):
-                    error = test_result
-                    last_error_change = 1
 
         # construct the snippet list
         SnippetList = -1
