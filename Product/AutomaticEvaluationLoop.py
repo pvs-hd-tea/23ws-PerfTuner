@@ -1,7 +1,6 @@
 from PerfTunerClass import PerfTuner
 import matplotlib.pyplot as plt
-import subprocess
-import time
+
 
 def main():
     print("----------------------------------------------------------------------------------------")
