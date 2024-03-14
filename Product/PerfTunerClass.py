@@ -75,6 +75,12 @@ class PerfTuner:
                                                                     jobsStatusArray, self.runs_buildSnippet))
                 Jobs.append(job)
 
+        for job in Jobs:
+            job.start()
+                
+        for job in Jobs: 
+            job.join()
+
         # output
         print("# Statistics of the transformation:")
         print("")
