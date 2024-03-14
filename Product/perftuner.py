@@ -50,6 +50,9 @@ print("")
 # get the number of the desired default snippet
 defaultSnippet = "snippet"
 if (method == "default"):
+    if (int(runs_useSnippet) > 1):
+        runs_useSnippet = 1
+        print("By choosing the default method, only one snippet is used!")
     while(True):
         choice = int(input("Give the number of the default snippet to be used (1-11): "))
         if (choice > 0 and choice < 12):
