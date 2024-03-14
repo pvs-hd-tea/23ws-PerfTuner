@@ -33,19 +33,40 @@ print("")
 
 # get the method for finding the snippet list
 while(True):
-    choice = input("Which method should be used to find the snippets? Type 1 for tournament and 2 for voting: ")
+    choice = input("Which method should be used to find the snippets? Type 1 for tournament, 2 for voting or 3 for a default snippet: ")
     if (choice == "1"):
         method = "tournament"
         break
     if (choice == "2"):
         method = "voting"
         break
+    if (choice == "3"):
+        method = "default"
+        break
     print("Incorrect choice for method. Please try again.")
 
 print("")
 
+# get the number of the desired default snippet
+defaultSnippet = "snippet"
+if (method == "default"):
+    while(True):
+        choice = int(input("Give the number of the default snippet to be used (1-11): "))
+        if (choice > 0 and choice < 12):
+            break
+        print("Incorrect choice for number of snippet. Please try again.")
+else:
+    choice = 10 # default snippet, should not be needed.
+
+defaultSnippet += str(choice)
+
+print(defaultSnippet)
+
+
+
 # initialize the PerfTuner
-perfTuner = PerfTuner(files_path,runs_useSnippet,runs_buildSnippet,method)
+perfTuner = PerfTuner(files_path,runs_useSnippet,runs_buildSnippet,method,defaultSnippet)
 
 # do the transformation
 perfTuner.do()
+
