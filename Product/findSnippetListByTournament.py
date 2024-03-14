@@ -26,7 +26,7 @@ def findSnippetListByTournament(function, library):
         n*= 2
     n/= 2
 
-    # initial battles to reduce the number of contenders to power of 2:
+    # initial battles to reduce the number of contenders to power of 2
     numberOfInitialBattles = int(numberOfSnippets - n)
 
     for i in range(0,numberOfInitialBattles):
@@ -42,7 +42,7 @@ def findSnippetListByTournament(function, library):
     contenders += newContenders  # push winners to the remaining contenders
     newContenders = list() # clear winner list
 
-    # do tournament until final 4:
+    # do tournament until final 4
     while (len(contenders) > 4):
         while (len(contenders) > 1):
             # pick first contender
@@ -57,7 +57,7 @@ def findSnippetListByTournament(function, library):
         contenders = list(newContenders) # winners become the new contenders
         newContenders = list() # clear winner list
     
-    # do final 4:
+    # do final 4
     final4 = list()  # list for place 3 and 4
     while (len(contenders) > 1):
         # pick first contender
@@ -78,7 +78,7 @@ def findSnippetListByTournament(function, library):
     contenders = list(newContenders)
     newContenders = list()
 
-    # do final battle:
+    # do final battle
     runnerUp = list()  # second place
     contender1 = contenders[0]
     contender2 = contenders[1]
@@ -90,7 +90,7 @@ def findSnippetListByTournament(function, library):
     runnerUp.remove(winner)
     
 
-    # wrap up result:
+    # wrap up result
     solution = []
     solution.append(["snippet" + str(winner) + ".cc", "snippet" + str(winner) + "_opt.cc"])
     solution.append(["snippet" + str(runnerUp[0]) + ".cc", "snippet" + str(runnerUp[0]) + "_opt.cc"])
@@ -125,7 +125,7 @@ def tournament(function,library,snippet1, snippet2):
     
     while(True):
         try:
-            # prepare prompt with function and snippets:
+            # prepare prompt with function and snippets
             prompt = "function: \n"  
             file_in = open(function,"r")
             prompt += file_in.read()
@@ -138,7 +138,7 @@ def tournament(function,library,snippet1, snippet2):
 
             client = OpenAI()
 
-            # do battle of snippets with chatGPT:
+            # do battle of snippets with chatGPT
             while(True):       
                 response = client.chat.completions.create(
                     model="gpt-3.5-turbo",#-4",
@@ -156,7 +156,7 @@ def tournament(function,library,snippet1, snippet2):
                     break
                 print("The (snippet) battle was not decided. I try again.")
             
-            # find winner and looser:
+            # find winner and looser
             if (found1 == None):
                 result = 2
             elif (found2 == None):

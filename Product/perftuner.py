@@ -59,7 +59,7 @@ if (method == "default"):
             break
         print("Incorrect choice for number of snippet. Please try again.")
 else:
-    choice = 10 # default snippet, should not be needed.
+    choice = 10 # default snippet, should not be needed
 
 defaultSnippet += str(choice)
 
