@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import random
 
+# the following function finds the best four snippets to transforming the given function
 def findSnippetListByTournament(function, library):
 
     numberOfSnippets = 11 # needs to be updated if the number of snippets is changed, needs to be >= 4
@@ -14,8 +15,8 @@ def findSnippetListByTournament(function, library):
     print("- " + str(function))
     print("")
 
-    contenders = list()
-    newContenders = list()
+    contenders = list() # list of all snippts still in competition
+    newContenders = list() # winners of current competition
     for i in range(1,numberOfSnippets+1):
         contenders.append(i)
 
@@ -29,50 +30,63 @@ def findSnippetListByTournament(function, library):
     numberOfInitialBattles = int(numberOfSnippets - n)
 
     for i in range(0,numberOfInitialBattles):
-        contender1 = random.choice(contenders)
+        # pick first contender
+        contender1 = random.choice(contenders) 
         contenders.remove(contender1)
+        # pick second contender
         contender2 = random.choice(contenders)
         contenders.remove(contender2)
+        # push winner to new list
         newContenders.append(tournament(function,library,contender1,contender2))
     
-    contenders += newContenders
-    newContenders = list()
+    contenders += newContenders  # push winners to the remaining contenders
+    newContenders = list() # clear winner list
 
     # do tournament until final 4:
     while (len(contenders) > 4):
         while (len(contenders) > 1):
+            # pick first contender
             contender1 = random.choice(contenders)
             contenders.remove(contender1)
+            # pick second contender
             contender2 = random.choice(contenders)
             contenders.remove(contender2)
+            # push winner to new list
             newContenders.append(tournament(function,library,contender1,contender2))
         
-        contenders = list(newContenders)
-        newContenders = list()
+        contenders = list(newContenders) # winners become the new contenders
+        newContenders = list() # clear winner list
     
     # do final 4:
-    final4 = list()    
+    final4 = list()  # list for place 3 and 4
     while (len(contenders) > 1):
+        # pick first contender
         contender1 = random.choice(contenders)
         contenders.remove(contender1)
+        # pick second contender
         contender2 = random.choice(contenders)
         contenders.remove(contender2)
+        # push participants to final4 list
         final4.append(contender1)
         final4.append(contender2)
+        # push winner to new list
         winner = tournament(function,library,contender1,contender2)
         newContenders.append(winner)
+        # remove winner from final4 list (because he advances)
         final4.remove(winner)
             
     contenders = list(newContenders)
     newContenders = list()
 
     # do final battle:
-    runnerUp = list()
+    runnerUp = list()  # second place
     contender1 = contenders[0]
     contender2 = contenders[1]
     runnerUp.append(contender1)
     runnerUp.append(contender2)
+    # push winner to new list
     winner = tournament(function,library,contender1,contender2)
+    # remove winner from runnerUp list
     runnerUp.remove(winner)
     
 
@@ -84,7 +98,7 @@ def findSnippetListByTournament(function, library):
     solution.append(["snippet" + str(final4[1]) + ".cc", "snippet" + str(final4[1]) + "_opt.cc"])
 
     if solution == []:
-        return -1
+        return -1  # no snippet won the (should not happen)
             
     print("# The snippet list has been successfully constructed:")
     print("")
@@ -95,6 +109,7 @@ def findSnippetListByTournament(function, library):
     return solution
 
         
+# function to do battle between two snippets
 def tournament(function,library,snippet1, snippet2):
 
     # set file paths
@@ -104,6 +119,7 @@ def tournament(function,library,snippet1, snippet2):
     path2 = "snippet" + str(snippet2) + ".cc"
     snippet2_path = core_path / path2
 
+    # load token form .env
     load_dotenv()
     
     while(True):
@@ -124,22 +140,22 @@ def tournament(function,library,snippet1, snippet2):
             # do battle of snippets with chatGPT:
             while(True):       
                 response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-3.5-turbo",#-4",
                     messages=[
                     {"role": "system", "content": "You will be given a C++-function and two different snippets.\
                         Which snippet performs a taks, that is more closely related to the taks of the C++-function? \
                         <snippet 1> or <snippet 2>?"},
                     {"role": "user", "content": prompt}])
-                
                 choice = response.choices[0].message.content
 
+                # determine the winner from answer by chatGPT
                 found1 = re.search("1",choice)
                 found2 = re.search("2",choice)
                 if (found1 != None or found2 != None):
                     break
                 print("The (snippet) battle was not decided. I try again.")
             
-            # find winner:
+            # find winner and looser:
             if (found1 == None):
                 result = 2
             elif (found2 == None):

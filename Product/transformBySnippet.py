@@ -18,7 +18,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     
     # train chatGPT with snippet and manual transformation
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo",#-4",
         temperature=1.0,
         messages=[
         {"role": "user", "content": "You will be given a c++ snippet. Optimize the snippet using AVX intrinsics."},
@@ -31,7 +31,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     
     # create list of subtasks in the function
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo",#-4",
         temperature=1.0,
         messages=[
         {"role": "system", "content": "You will be given a c++ function after the key word 'function:'\
@@ -43,7 +43,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
 
     # determine which subtaks can be optimized
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo",#-4",
         temperature=1.0,
         messages=[
         {"role": "user", "content": "Which subtask of the following list can be optimized by using AVX intrinsics?"},
@@ -54,7 +54,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     
     # create the optimized function with the previously obtained information
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo",#-4",
         temperature=1.0,
         messages=[
         {"role": "user", "content": "You will be given a c++ function after the key word 'function:'"},

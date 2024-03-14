@@ -1,5 +1,6 @@
 import re
 
+# this function simply returns a default snippet List
 def findSnippetListDefault():
 
     print("# A default snippet is used.")
