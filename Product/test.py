@@ -5,6 +5,11 @@ import os
 
 
 def test(main_file, function_file, output_file, function_opt, output_file_avx):
+
+    # make files for the executables if not already existing
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file_avx.parent.mkdir(parents=True, exist_ok=True)
+
     warnings.filterwarnings("ignore")
     null_output = "NUL" if os.name == "nt" else "/dev/null"
 
