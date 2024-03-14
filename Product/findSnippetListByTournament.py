@@ -99,7 +99,8 @@ def findSnippetListByTournament(function, library):
 
     if solution == []:
         return -1  # no snippet won the (should not happen)
-            
+
+    print("")        
     print("# The snippet list has been successfully constructed:")
     print("")
     for x in solution:
