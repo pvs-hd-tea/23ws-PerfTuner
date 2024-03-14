@@ -1,29 +1,22 @@
+from dotenv import load_dotenv
+from pathlib import Path
+from openai import OpenAI
+
+# the following function uses a snippet to guide chatGPT in transforming the given function
 def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath):
-    from dotenv import load_dotenv
-    from pathlib import Path
-    from openai import OpenAI
+    # open the needed files:
+    with open(function_filepath, "r") as file:
+        function = file.read()
+    with open(snippet_filepath, "r") as file:
+        snippet = file.read()
+    with open(snippet_opt_filepath, "r") as file:
+        snippet_opt = file.read()
 
-    with open(function_filepath, "r") as datei:
-        function = datei.read()
-    #print("- The function is:")
-    #print(function)
-    #print("")
-
-    with open(snippet_filepath, "r") as datei:
-        snippet = datei.read()
-    #print("- The snippet is:")
-    #print(snippet)
-    #print("")
-
-    with open(snippet_opt_filepath, "r") as datei:
-        snippet_opt = datei.read()
-    #print("- The snippet_opt is:")
-    #print(snippet_opt)
-    #print("")
-           
-    load_dotenv()
+    # enable conection to chatGPT           
+    load_dotenv()  # load token from .env
     client = OpenAI()
     
+    # train chatGPT with snippet and manual transformation
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         temperature=1.0,
@@ -34,9 +27,9 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
         {"role": "user", "content": "Explain your work."},
         ]
     )
-
     generated_text1 = response.choices[0].message.content
     
+    # create list of subtasks in the function
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         temperature=1.0,
@@ -46,9 +39,9 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
         {"role": "user", "content": "function: " + function},
         ]
     )
-    
     generated_text2 = response.choices[0].message.content
 
+    # determine which subtaks can be optimized
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         temperature=1.0,
@@ -57,9 +50,9 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
         {"role": "user", "content": "function: " + generated_text1}
         ]
     )
-
     generated_text3 = response.choices[0].message.content
     
+    # create the optimized function with the previously obtained information
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         temperature=1.0,
@@ -80,25 +73,18 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
          Mark the start of the code with: ```cpp and the end with ```"},
         ]
     )
-
     generated_text4 = response.choices[0].message.content
 
-    #print("- The function_opt is:")
-
+    # extract the code from the answer by chatGPT
     try:
         output1 = generated_text4.split("```cpp")
 
         if (len(output1) > 1): 
             output2 = output1[1].split("```")
-            #print(output2[0])
-            #print("")
             return output2[0]
         else:
-            #print(output1[0])
-            #print("")
             return output1[0]
-    
-    
+     
     except:
         print("The code could not be extracted from the answer from chatGPT.")
         return("")

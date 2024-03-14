@@ -50,7 +50,6 @@ def findSnippetListByTournament(function, library):
         contenders = list(newContenders)
         newContenders = list()
     
-
     # do final 4:
     final4 = list()    
     while (len(contenders) > 1):
@@ -123,9 +122,9 @@ def tournament(function,library,snippet1, snippet2):
             client = OpenAI()
 
             # do battle of snippets with chatGPT:
-            while(True):          
+            while(True):       
                 response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-4",#3.5-turbo",
                     messages=[
                     {"role": "system", "content": "You will be given a C++-function and two different snippets.\
                         Which snippet performs a taks, that is more closely related to the taks of the C++-function? \

@@ -3,6 +3,7 @@ import multiprocessing
 import math
 import numpy as np
 import os
+import subprocess
 from findSnippetList import findSnippetList
 from findSnippetListByTournament import findSnippetListByTournament
 from transformBySnippet import transformBySnippet
@@ -12,8 +13,7 @@ from TaskCode import TaskCode
 
 class PerfTuner:
     
-    def __init__(self, subpath, runs_directLLM=0, runs_useSnippet=2, runs_buildSnippet=10, runs_Google=5, runs_useUserSnippet=2, runs_buildUserSnippet=5, snippetListMethod ="tournament"):
-        
+    def __init__(self, subpath, runs_useSnippet=2, runs_buildSnippet=7, snippetListMethod ="tournament"):    
         # input files, output file, library file
         self.script_dir = Path(__file__).resolve().parent
         files_path = self.script_dir / subpath
@@ -26,15 +26,8 @@ class PerfTuner:
         self.output_avx_filepath = files_path / "output_avx"
         
         # run limits
-        self.runs_directLLM = runs_directLLM
-        
-        self.runs_useSnippet = runs_useSnippet
-        self.runs_buildSnippet = runs_buildSnippet
-
-        self.runs_Google = runs_Google
-
-        self.runs_useUserSnippet = runs_useUserSnippet
-        self.runs_buildUserSnippet = runs_buildUserSnippet
+        self.runs_useSnippet = int(runs_useSnippet)
+        self.runs_buildSnippet = int(runs_buildSnippet)
 
         # options
         self.snippetListMethod = snippetListMethod
@@ -42,34 +35,6 @@ class PerfTuner:
     
     def do(self):
         
-        error = -3
-        last_error_change = "-"
-
-        # 1. run (direct LLM)
-        for i in range (0, self.runs_directLLM):
-            print("# A transformation by direct LLM try has been started:")
-            print("- it's the following try of this approach: " + str(i))
-            print("")
-            
-            # # transform by using ChatGPT directly
-            # output = transformByLLM(self.function_filepath)
-            # with open(self.function_opt_filepath, "w") as file_out:
-            #     file_out.write(output)
-
-            # test the result and finish if successful
-            print("# The result is being tested:")
-            print("")
-            test_result = test(self.main_filepath, self.function_filepath, self.output_filepath, self.function_opt_filepath, self.output_avx_filepath)
-            if(test_result==0):
-                print("SUCCESS: The working optimized function can be found in " + str(self.function_opt_filepath))
-                return [0, 1, i, "-"] # [success, 1. run, ith build]
-            else:
-                print("THE TRANSFORMATION HAS FAILED.")
-                print("")
-                if(test_result>error):
-                    error = test_result
-                    last_error_change = 1
-
         # construct the snippet list
         SnippetList = -1
         if self.snippetListMethod == "voting":
@@ -109,17 +74,6 @@ class PerfTuner:
                                                                     self.output_avx_filepath / str(i) / str(j),
                                                                     jobsStatusArray, self.runs_buildSnippet))
                 Jobs.append(job)
-
-        # controller = multiprocessing.Process(target= Controll, args=(Jobs, jobsStatusArray))
-        
-        # controller.start()
-        for job in Jobs:
-            job.start()
-                
-        for job in Jobs: 
-            job.join()
-        # controller.kill()
-        # controller.join()
 
         # output
         print("# Statistics of the transformation:")
@@ -201,5 +155,9 @@ class PerfTuner:
         
         print("=> transformation quality average: " + str(transformationQualityAverage) + ", success rate: " + str(successRate)) 
         print("") 
+        if (best_snippet != ""):
+            print("The best transformation can be found in the file function_opt.cc")
+            command = "this needs to be added for Windows!!!" if os.name == "nt" else "cp " + str(self.function_opt_filepath) + "/" + str(numberInList) + "/" + str(buildTrial) + ".cc function_opt.cc" 
+            result = subprocess.run(command, shell=True)
         
         return[max(best_results), numberInList, best_snippet, buildTrial, best_time, runtime_cc_compared, best_results, transformationQualityAverage, successRate]

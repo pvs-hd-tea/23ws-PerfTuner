@@ -37,5 +37,5 @@ print("")
 
 
 # Initializing perfTuner
-perfTuner = PerfTuner(files_path,runs_useSnippet,runs_buildSnippet,0,0,method)
+perfTuner = PerfTuner(files_path,runs_useSnippet,runs_buildSnippet,method)
 perfTuner.do()
