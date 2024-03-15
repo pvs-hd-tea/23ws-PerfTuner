@@ -202,16 +202,16 @@ def main():
     plt.show()
 
     # TODO: Not- working yet- Plotting snippet choices graph
-    snippet_numbers = [int(snippet[-1]) for snippet in snippet_choices_for_plot]  # Extracting snippet numbers
-    plt.figure(figsize=(10, 6))
-    plt.bar(snippet_numbers, [snippet_count.get(f"Snippet{i}", 0) for i in range(1, 12)], color='green')
-    plt.xlabel('Snippet Numbers')
-    plt.ylabel('Number of Problems')
-    plt.title('Number of Problems Using Each Snippet')
-    plt.xticks(range(1, 12))  # Setting x-axis ticks to snippet numbers from 1 to 11
-    plt.tight_layout()
-    plt.savefig('Statistics/snippet_choices_graph.png')
-    plt.show()
+    # snippet_numbers = [int(snippet[-1]) for snippet in snippet_choices_for_plot]  # Extracting snippet numbers
+    # plt.figure(figsize=(10, 6))
+    # plt.bar(snippet_numbers, [snippet_count.get(f"Snippet{i}", 0) for i in range(1, 12)], color='green')
+    # plt.xlabel('Snippet Numbers')
+    # plt.ylabel('Number of Problems')
+    # plt.title('Number of Problems Using Each Snippet')
+    # plt.xticks(range(1, 12))  # Setting x-axis ticks to snippet numbers from 1 to 11
+    # plt.tight_layout()
+    # plt.savefig('Statistics/snippet_choices_graph.png')
+    # plt.show()
 
 if __name__ == "__main__":
     main()
