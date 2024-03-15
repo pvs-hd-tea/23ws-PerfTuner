@@ -7,4 +7,5 @@ function_opt.cc
 output_avx.exe
 output_cc.exe
 .gitignore
+.vscode/
 
