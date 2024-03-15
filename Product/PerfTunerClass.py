@@ -74,8 +74,8 @@ class PerfTuner:
         print("# A transformation by snippet try has been started")
         print("")
 
-        for i in range (0, self.runs_useSnippet): # amount of snippets of SnippetList that should be used
-            for j in range (0, self.runs_buildSnippet): # and how often they should be tried
+        for i in range (self.runs_useSnippet): # amount of snippets of SnippetList that should be used
+            for j in range (self.runs_buildSnippet): # and how often they should be tried
                 job = multiprocessing.Process(target=TaskCode, args=(i, j, 
                                                                     self.script_dir / "Snippets" / SnippetList[i][0], 
                                                                     self.script_dir / "Snippets" / SnippetList[i][1], 
@@ -107,8 +107,8 @@ class PerfTuner:
         transformationQuality = [0] * self.runs_useSnippet # sum of statuses per snippet used
         
         # concerning the best transforming process
-        numberInList = -1 # rank in SnippetList 
         best_snippet = "" # used snippet 
+        numberInList = -1 # rank of the used snippet in SnippetList 
         buildTrial = -1 # build trial with that snippet 
         runtime_cc_compared = -1 # the runtime of function_cc he was compared against
         

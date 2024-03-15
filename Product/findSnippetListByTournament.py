@@ -105,7 +105,7 @@ def findSnippetListByTournament(function, library):
     print("")
     for x in solution:
         print(x)
-        print("")
+    print("")
             
     return solution
 
@@ -144,7 +144,7 @@ def tournament(function,library,snippet1, snippet2):
                     model="gpt-3.5-turbo",#-4",
                     messages=[
                     {"role": "system", "content": "You will be given a C++-function and two different snippets.\
-                        Which snippet performs a taks, that is more closely related to the taks of the C++-function? \
+                        Which snippet performs a task, that is more closely related to the task of the C++-function? \
                         <snippet 1> or <snippet 2>?"},
                     {"role": "user", "content": prompt}])
                 choice = response.choices[0].message.content
