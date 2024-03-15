@@ -63,9 +63,6 @@ else:
 
 defaultSnippet += str(choice)
 
-print(defaultSnippet)
-
-
 
 # initialize the PerfTuner
 perfTuner = PerfTuner(files_path,runs_useSnippet,runs_buildSnippet,method,defaultSnippet)
