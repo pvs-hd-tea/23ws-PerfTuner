@@ -1,8 +1,6 @@
 import re
 from dotenv import load_dotenv
-
 from askChatGPT import askChatGPT
-from Functionality import split
 
 
 def findSnippetList(function, library):
@@ -67,4 +65,35 @@ def findSnippetList(function, library):
         except Exception as e:
             print(f"error: {e}")
 
+
+### auxiliary functions ###
+
+# function to split the string into an array of strings ("1. x 2. y" -> ["1. x", "2. y"])
+def split(SubTaskString):
+        
+        ## stack functionality: pop top (one string) -> split top -> push the result (two strings) ##
+
+        # initialize stack
+        SubTaskArray = [SubTaskString.split("1. ")[1]] # special case: the first half of the split at 1. is an empty string
+
+        # iterative split of the top element for the length of the list
+        for splitter in range (2, find_largest_number(SubTaskString)):
+                splitting = SubTaskArray.pop().split(str(splitter)+". ")
+                SubTaskArray.extend(splitting)
+                splitter += 1
+
+        return SubTaskArray
+
+# function to determine the length of the list (a string) given by ChatGPT           
+def find_largest_number(input_string):
     
+    # extract all numbers from the string
+    numbers = re.findall(r'\d+', input_string)
+
+    # return None if no number has been found
+    if not numbers:
+        return None
+
+    # else: return the largest
+    max_number = max(map(int, numbers))
+    return max_number
