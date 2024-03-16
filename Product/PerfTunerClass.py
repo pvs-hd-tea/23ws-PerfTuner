@@ -125,7 +125,7 @@ class PerfTuner:
 
             # get its information
             status = jobsStatusArray[index][0]
-            best_results.append(status)
+            best_results.append(round(status,2))
             transformationQuality[i] += status
             runtime_cc = jobsStatusArray[index][1]
             runtime_avx = jobsStatusArray[index][2]
@@ -174,11 +174,11 @@ class PerfTuner:
 
         transformationQualityAverage = [-1] * self.runs_useSnippet
         for i in range(self.runs_useSnippet):
-            transformationQualityAverage[i] = transformationQuality[i]/divisor
+            transformationQualityAverage[i] = round(transformationQuality[i]/divisor,2)
 
         successRate = [-1] * self.runs_useSnippet
         for i in range(self.runs_useSnippet):
-            successRate[i] = success[i]/divisor
+            successRate[i] = round(success[i]/divisor,2)
 
         print("=> transformation quality average: " + str(transformationQualityAverage) + ", success rate: " + str(successRate)) 
         print("") 
@@ -202,4 +202,4 @@ class PerfTuner:
         
         
         # return a statistics array with the information of the transformation
-        return[max(best_results), numberInList, best_snippet, buildTrial, best_time, runtime_cc_compared, best_results, transformationQualityAverage, successRate]
+        return[max(best_results), numberInList, best_snippet, buildTrial, round(best_time,2), round(runtime_cc_compared,2), best_results, transformationQualityAverage, successRate]
