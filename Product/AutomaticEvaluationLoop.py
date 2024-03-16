@@ -282,7 +282,7 @@ def main():
     plt.savefig(files_path)
     plt.show()
 
-    # table - snippet succes rate
+    # table3 - snippet succes rate
     # extract snippet numbers from STATISTICS
     snippet_numbers = [statistics[1][2] for statistics in STATISTICS]
 
