@@ -298,13 +298,15 @@ def main():
         efficiency = count / total_runs
         snippet_efficiencies[snippet_number] = efficiency
 
+    sorted_efficiencies = sorted(snippet_efficiencies.items(), key=lambda x: x[1], reverse=False)
 
     # create data for the table
     table_data = [["Snippet Number", "Efficiency"]]
-    for snippet_number, efficiency in snippet_efficiencies.items():
-        table_data.append([snippet_number, f"{efficiency:.2%}"])
+    for snippet_number, efficiency in sorted_efficiencies:
+        if snippet_number.startswith("snippet"):
+            table_data.append([snippet_number, f"{efficiency:.2%}"])
 
-    table_data.pop()  # Remove the last row
+    #table_data.pop()  # Remove the last row
 
     # plotting the table
     plt.figure(figsize=(8, 6))
