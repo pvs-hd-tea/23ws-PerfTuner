@@ -151,7 +151,7 @@ def main():
         data.append([statistics[0], statistics[1]])
 
     plt.figure(figsize=(10, 6))
-    table = plt.table(cellText=data, loc='center', cellLoc='left', colWidths=[0.4, 1.0])
+    table = plt.table(cellText=data, loc='center', cellLoc='left', colWidths=[0.5, 2.0])
     table.auto_set_font_size(False)
     table.set_fontsize(12)
     table.scale(1, 1.5)
@@ -160,8 +160,7 @@ def main():
 
     files_path = script_dir / "Statistics/table2.png"
     plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
-
-    #GRAPH 1
+    # GRAPH 1
 
     # Extracting data for solved status graph
     class_names_for_plot = [class_name for class_name in classes for _ in range(len(classes[class_name]))]
@@ -172,19 +171,19 @@ def main():
     # Creating the plot for solved status graph
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plotting each problem
+    # Plotting each problem with larger dot size
     for i, problem_name in enumerate(solved_status_names_for_plot):
         class_name = class_for_plot[i]
         color = class_color_mapping.get(class_name, 'gray')  # Use gray for unknown classes
-        ax.scatter(problem_name, solved_status_for_plot[i], color=color, label=class_name)
+        ax.scatter(problem_name, solved_status_for_plot[i], color=color, label=class_name, s=100)  # Larger dot size
 
     # Setting labels and title for solved status graph
     ax.set_xlabel('Problem Names')
     ax.set_ylabel('Solved Status (1: Solved, 0: Fail)')
     ax.set_title('Solved Status of Problems by Class')
 
-    # Adding legend for solved status graph
-    ax.legend()
+    # Adding legend for solved status graph outside the plot
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
 
     # Rotating x-axis labels for better visibility
     plt.xticks(rotation=45, ha='right')
@@ -299,15 +298,13 @@ def main():
         efficiency = count / total_runs
         snippet_efficiencies[snippet_number] = efficiency
 
-    # # Output the efficiency for each snippet number
-    # for snippet_number, efficiency in snippet_efficiencies.items():
-    #     print(f" {snippet_number}: Efficiency = {efficiency:.2%}")
-
 
     # Create data for the table
     table_data = [["Snippet Number", "Efficiency"]]
     for snippet_number, efficiency in snippet_efficiencies.items():
         table_data.append([snippet_number, f"{efficiency:.2%}"])
+
+    table_data.pop()  # Remove the last row
 
     # Plotting the table
     plt.figure(figsize=(8, 6))
