@@ -1,5 +1,6 @@
 from PerfTunerClass import PerfTuner
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def main():
@@ -139,7 +140,10 @@ def main():
     table.set_fontsize(12)
     table.scale(1, 1.5)
     plt.axis('off')
-    plt.savefig('Statistics/table1.png', bbox_inches='tight', pad_inches=0.05)
+
+    script_dir = Path(__file__).resolve().parent
+    files_path = script_dir / "Statistics/table1.png"
+    plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
 
     # table 2
     data = [["Problem", "Statistics"]]
@@ -153,7 +157,8 @@ def main():
     table.set_fontsize(12)
     table.scale(1, 1.5)
     plt.axis('off')
-    plt.savefig('Statistics/table2.png', bbox_inches='tight', pad_inches=0.05)
+    files_path = script_dir / "Statistics/table2.png"
+    plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
 
     # Assuming RESULT is a list of lists where each inner list contains [class_name, solved/total]
     # and STATISTICS is a list of lists where each inner list contains [problem_name, statistics]
@@ -188,7 +193,8 @@ def main():
 
     # Save the plot for solved status graph to a file
     plt.tight_layout()
-    plt.savefig('Statistics/solved_status_graph.png')
+    files_path = script_dir / "Statistics/solved_status_graph.png"
+    plt.savefig(files_path)
 
     # Plotting execution time graph
     plt.figure(figsize=(10, 6))
@@ -198,7 +204,8 @@ def main():
     plt.title('Execution Time of Problems')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('Statistics/execution_time_graph.png')
+    files_path = script_dir / "Statistics/execution_time_graph.png"
+    plt.savefig(files_path)
     plt.show()
 
     # TODO: Not- working yet- Plotting snippet choices graph
