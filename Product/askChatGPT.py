@@ -36,6 +36,7 @@ def askChatGPT(files_in_name, file_out_name, message):
         return generated_text
     
     else:
+
         # construct file if not already existing
         file_path = script_dir / file_out_name
 
