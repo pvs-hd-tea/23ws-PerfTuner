@@ -80,7 +80,6 @@ def main():
 
             # Initializing perfTuner
             perfTuner = PerfTuner("Problems/" + class_name + "/" + problem)
-  
 
             statistics = perfTuner.do()
             STATISTICS.append([problem + " (" + class_name + ")", statistics])
@@ -279,6 +278,52 @@ def main():
 
     plt.tight_layout()
     plt.savefig('Statistics/snippet_chosen_graph.png')
+    plt.show()
+
+
+
+    from collections import Counter
+
+    # Extract snippet numbers from STATISTICS
+    snippet_numbers = [statistics[1][2] for statistics in STATISTICS]
+
+    # Count the frequency of each snippet number
+    snippet_counts = Counter(snippet_numbers)
+
+    # Total number of runs
+    total_runs = len(STATISTICS)
+
+    # Calculate efficiency for each snippet number
+    snippet_efficiencies = {}
+    for snippet_number, count in snippet_counts.items():
+        efficiency = count / total_runs
+        snippet_efficiencies[snippet_number] = efficiency
+
+    # # Output the efficiency for each snippet number
+    # for snippet_number, efficiency in snippet_efficiencies.items():
+    #     print(f" {snippet_number}: Efficiency = {efficiency:.2%}")
+
+
+    # Create data for the table
+    table_data = [["Snippet Number", "Efficiency"]]
+    for snippet_number, efficiency in snippet_efficiencies.items():
+        table_data.append([snippet_number, f"{efficiency:.2%}"])
+
+    # Plotting the table
+    plt.figure(figsize=(8, 6))
+    table = plt.table(cellText=table_data, loc='center', cellLoc='center', colWidths=[0.2, 0.2])
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.5, 1.5)  # Adjust table size as needed
+
+    # Removing axes
+    plt.axis('off')
+
+    # Saving the table as an image
+    script_dir = Path(__file__).resolve().parent
+    files_path = script_dir / "Statistics/table_Snippet_success_rate.png"
+    plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
+    # Show the table
     plt.show()
 
 
