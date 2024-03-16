@@ -1,7 +1,4 @@
-from pathlib import Path
-from askChatGPT import askChatGPT
 import re
-from Functionality import split
 from dotenv import load_dotenv
 from openai import OpenAI
 import random
