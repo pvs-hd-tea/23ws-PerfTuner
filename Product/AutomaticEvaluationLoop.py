@@ -2,8 +2,10 @@ from PerfTunerClass import PerfTuner
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from collections import Counter
 
 def main():
+
     print("----------------------------------------------------------------------------------------")
     print("Welcome to the automatic evaluation loop of PerfTuner!")
     print("This evaluation loop will try to make different programs faster using AVX2 by calling ChatGPT via meta-strategies.")
@@ -14,15 +16,15 @@ def main():
     STATISTICS = []
     RESULT = []
 
-    # Lists to store problem names and corresponding runtimes for plotting
+    # lists to store problem names and corresponding runtimes for plotting
     problem_names_for_plot = []
     runtimes_cc_for_plot = []
 
-    # Lists to store problem names and corresponding snippet choices for plotting
+    # lists to store problem names and corresponding snippet choices for plotting
     snippet_names_for_plot = []
     snippet_choices_for_plot = []
 
-    # Lists to store problem names, solved status, and class for plotting
+    # lists to store problem names, solved status, and class for plotting
     solved_status_names_for_plot = []
     solved_status_for_plot = []
     class_for_plot = []
@@ -60,7 +62,7 @@ def main():
          ]
     }
 
-    # Dictionary to store the count of problems using each snippet
+    # dictionary to store the count of problems using each snippet
     snippet_count = {}
 
     for class_name, problems in classes.items():
@@ -78,7 +80,7 @@ def main():
             print("----------------------------------------------------------------------------------------")
             print("")
 
-            # Initializing perfTuner
+            # initializing perfTuner
             perfTuner = PerfTuner("Problems/" + class_name + "/" + problem)
 
             statistics = perfTuner.do()
@@ -89,36 +91,37 @@ def main():
                 print("")
                 
 
-                # Store data for plotting
+                # store data for plotting
                 problem_names_for_plot.append(problem)
                 runtimes_cc_for_plot.append(statistics[4])
 
-                # Store snippet choice data for plotting
+                # store snippet choice data for plotting
                 snippet_name = f"Snippet for {problem}"
                 snippet_choice = f"Snippet{statistics[1]}"  # Assuming snippet number is the second element in the statistics
                 snippet_names_for_plot.append(snippet_name)
                 snippet_choices_for_plot.append(snippet_choice)
 
-                # Store data for solved status graph
+                # store data for solved status graph
                 solved_status_names_for_plot.append(problem)
                 solved_status_for_plot.append(1)  # 1 indicates solved
                 class_for_plot.append(class_name)
 
-                # Update snippet count
+                # update snippet count
                 snippet_count[snippet_choice] = snippet_count.get(snippet_choice, 0) + 1
 
 
             else:
                 print("FAIL")
                 print("")
-                # Store data for solved status graph
+
+                # store data for solved status graph
                 solved_status_names_for_plot.append(problem)
                 solved_status_for_plot.append(0)  # 0 indicates failed
                 class_for_plot.append(class_name)
 
         RESULT.append([class_name, str(solved) + " / " + str(numberOfProblemsInClass)])
 
-    ## Output ##
+    ## output ##
     print("RESULT")
     for x in RESULT:
         print(x)
@@ -160,36 +163,36 @@ def main():
 
     files_path = script_dir / "Statistics/table2.png"
     plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
-    # GRAPH 1
 
-    # Extracting data for solved status graph
+    # GRAPH 1
+    # extracting data for solved status graph
     class_names_for_plot = [class_name for class_name in classes for _ in range(len(classes[class_name]))]
 
-    # Assigning unique colors to each class
+    # assigning unique colors to each class
     class_color_mapping = {class_name: plt.cm.jet(i / len(classes)) for i, class_name in enumerate(classes)}
 
-    # Creating the plot for solved status graph
+    # creating the plot for solved status graph
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plotting each problem with larger dot size
+    # plotting each problem with larger dot size
     for i, problem_name in enumerate(solved_status_names_for_plot):
         class_name = class_for_plot[i]
         color = class_color_mapping.get(class_name, 'gray')  # Use gray for unknown classes
         ax.scatter(problem_name, solved_status_for_plot[i], color=color, label=class_name, s=100)  # Larger dot size
 
-    # Setting labels and title for solved status graph
+    # setting labels and title for solved status graph
     ax.set_xlabel('Problem Names')
     ax.set_ylabel('Solved Status (1: Solved, 0: Fail)')
     ax.set_title('Solved Status of Problems by Class')
 
-    # Adding legend for solved status graph outside the plot
+    # adding legend for solved status graph outside the plot
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
 
-    # Rotating x-axis labels for better visibility
+    # rotating x-axis labels for better visibility
     plt.xticks(rotation=45, ha='right')
     plt.yticks([0, 1])  # Setting y-axis ticks to only 0 and 1
 
-    # Save the plot for solved status graph to a file
+    # save the plot for solved status graph to a file
     plt.tight_layout()
     files_path = script_dir / "Statistics/solved_status_graph.png"
     plt.savefig(files_path)
@@ -201,30 +204,29 @@ def main():
     original_runtimes_for_plot = []
     optimized_runtimes_for_plot = []
 
-    snippet_used_for_plot = []
 
-    # Extracting data for speed-up graph
+    # extracting data for speed-up graph
     for problem_info in STATISTICS:
         problem_name, class_name = problem_info[0].split(" (")
         original_runtime = problem_info[1][5]
         optimized_runtime = problem_info[1][4]
         snippet_used = problem_info[1][2]
 
-        # Check if runtime is non-negative
+        # check if runtime is non-negative
         if original_runtime >= 0 and optimized_runtime >= 0:
-            # Append data to lists
+            # append data to lists
             problem_names_for_plot.append(problem_name)
             original_runtimes_for_plot.append(original_runtime)
             optimized_runtimes_for_plot.append(optimized_runtime)
 
-    # Plotting speed-up graph
+    # plotting speed-up graph
     plt.figure(figsize=(10, 6))
     index = range(len(problem_names_for_plot))
     bar_width = 0.15
 
     max_runtime = max(max(original_runtimes_for_plot), max(optimized_runtimes_for_plot))
     if np.isfinite(max_runtime):
-        plt.ylim(0, max_runtime * 1.1)  # Add some padding
+        plt.ylim(0, max_runtime * 1.1)
 
 
     plt.bar(index, original_runtimes_for_plot, bar_width, alpha=1.0, color='yellow', label='Original Code Time')
@@ -237,7 +239,7 @@ def main():
     plt.xticks(index, problem_names_for_plot, rotation=45, ha='right')
     plt.legend()
 
-    # Place legend outside the plot
+    # place legend outside the plot
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
 
     plt.tight_layout()
@@ -248,25 +250,24 @@ def main():
     plt.show()
 
     # GRAPH 3
-
-    # Lists to store problem names and corresponding snippets chosen for plotting
+    # lists to store problem names and corresponding snippets chosen for plotting
     problem_names_for_snippet_plot = []
     snippets_chosen_for_plot = []
 
-    # Extracting data for snippet chosen graph
+    # extracting data for snippet chosen graph
     for problem_info in STATISTICS:
         problem_name, class_name = problem_info[0].split(" (")
         snippet_chosen = problem_info[1][2]
 
-        # Append data to lists
+        # append data to lists
         if len(snippet_chosen)>0:
             problem_names_for_snippet_plot.append(problem_name)
             snippets_chosen_for_plot.append(snippet_chosen)
 
-    # Plotting snippet chosen graph
+    # plotting snippet chosen graph
     plt.figure(figsize=(10, 6))
 
-    # Plotting markers for snippet chosen
+    # plotting markers for snippet chosen
     plt.scatter(problem_names_for_snippet_plot, snippets_chosen_for_plot, color='blue', label='Snippet Chosen')
 
     plt.xlabel('Problem Names')
@@ -275,52 +276,48 @@ def main():
     plt.xticks(rotation=45, ha='right')
     plt.legend()
 
+    # saving the table as an image
     plt.tight_layout()
-    plt.savefig('Statistics/snippet_chosen_graph.png')
+    files_path = script_dir / "Statistics/snippet_chosen_graph.png"
+    plt.savefig(files_path)
     plt.show()
 
-
-
-    from collections import Counter
-
-    # Extract snippet numbers from STATISTICS
+    # table - snippet succes rate
+    # extract snippet numbers from STATISTICS
     snippet_numbers = [statistics[1][2] for statistics in STATISTICS]
 
-    # Count the frequency of each snippet number
+    # count the frequency of each snippet number
     snippet_counts = Counter(snippet_numbers)
 
-    # Total number of runs
+    # total number of runs
     total_runs = len(STATISTICS)
 
-    # Calculate efficiency for each snippet number
+    # calculate efficiency for each snippet number
     snippet_efficiencies = {}
     for snippet_number, count in snippet_counts.items():
         efficiency = count / total_runs
         snippet_efficiencies[snippet_number] = efficiency
 
 
-    # Create data for the table
+    # create data for the table
     table_data = [["Snippet Number", "Efficiency"]]
     for snippet_number, efficiency in snippet_efficiencies.items():
         table_data.append([snippet_number, f"{efficiency:.2%}"])
 
     table_data.pop()  # Remove the last row
 
-    # Plotting the table
+    # plotting the table
     plt.figure(figsize=(8, 6))
     table = plt.table(cellText=table_data, loc='center', cellLoc='center', colWidths=[0.2, 0.2])
     table.auto_set_font_size(False)
     table.set_fontsize(12)
-    table.scale(1.5, 1.5)  # Adjust table size as needed
-
-    # Removing axes
+    table.scale(1.5, 1.5)
     plt.axis('off')
 
-    # Saving the table as an image
+    # saving the table as an image
     script_dir = Path(__file__).resolve().parent
     files_path = script_dir / "Statistics/table_Snippet_success_rate.png"
     plt.savefig(files_path, bbox_inches='tight', pad_inches=0.05)
-    # Show the table
     plt.show()
 
 
