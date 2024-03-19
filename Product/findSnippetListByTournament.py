@@ -12,7 +12,7 @@ def findSnippetListByTournament(function, library):
     print("- " + str(function))
     print("")
 
-    contenders = list() # list of all snippts still in competition
+    contenders = list() # list of all snippets still in competition
     newContenders = list() # winners of current competition
     for i in range(1,numberOfSnippets+1):
         contenders.append(i)

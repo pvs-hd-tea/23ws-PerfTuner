@@ -1,5 +1,5 @@
 #include <immintrin.h>
-int vec_size = 4; // vec_sice = 4 since the AVX can hold 4 double values
+int vec_size = 4; // vec_size = 4 since the AVX can hold 4 double values
 __m256d vec1,vec2,factor; // define variables only once outside the loop
 A[s] /= A[p];
 factor = _mm256_set1_pd(A[s]); // load the constant only once outside the loop
