@@ -12,7 +12,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     with open(snippet_opt_filepath, "r") as file:
         snippet_opt = file.read()
 
-    # enable conection to chatGPT           
+    # enable connection to chatGPT           
     load_dotenv()  # load token from .env
     client = OpenAI()
     
@@ -41,7 +41,7 @@ def transformBySnippet(function_filepath, snippet_filepath, snippet_opt_filepath
     )
     generated_text2 = response.choices[0].message.content
 
-    # determine which subtaks can be optimized
+    # determine which subtasks can be optimized
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",#-4",
         temperature=1.0,

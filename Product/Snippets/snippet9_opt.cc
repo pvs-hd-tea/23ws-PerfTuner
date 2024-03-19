@@ -1,5 +1,5 @@
 #include <immintrin.h>
-int vec_size = 4;                      // vec_sice = 4 since the AVX can hold 4 double values
+int vec_size = 4;                      // vec_size = 4 since the AVX can hold 4 double values
 __m256d vec1, vec2, ayx, byy, p1, bxx; // define variables only once outside the loop
 int i = 0;
 for (; i <= n - vec_size; i += vec_size) // head loop (optimized using AVX)

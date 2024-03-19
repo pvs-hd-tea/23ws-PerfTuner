@@ -175,7 +175,7 @@ for (int i = 0; i < n; i+=2)
 
 snippet9_opt:
 #include <immintrin.h>
-int vec_size = 4;                      // vec_sice = 4 since the AVX can hold 4 double values
+int vec_size = 4;                      // vec_size = 4 since the AVX can hold 4 double values
 __m256d vec1, vec2, ayx, byy, p1, bxx; // define variables only once outside the loop
 int i = 0;
 for (; i <= n - vec_size; i += vec_size) // head loop (optimized using AVX)
@@ -205,7 +205,7 @@ for (int i = lower; i < upper; i += 1)
 
 snippet10_opt:
 #include <immintrin.h>
-int vec_size = 4; // vec_sice = 4 since the AVX can hold 4 double values
+int vec_size = 4; // vec_size = 4 since the AVX can hold 4 double values
 __m256d vec1,vec2,factor; // define variables only once outside the loop
 A[s] /= A[p];
 factor = _mm256_set1_pd(A[s]); // load the constant only once outside the loop
@@ -227,7 +227,7 @@ for (int i = lower1; i < lower1 + M; i++)
 
 snippet11_opt:
 #include <immintrin.h>
-int vec_size = 4; // vec_sice = 4 since the AVX can hold 4 double values
+int vec_size = 4; // vec_size = 4 since the AVX can hold 4 double values
 int A_start, B_start;
 __m256d a0,a1,a2,a3,t0,t1,t2,t3,b0,b1,b2,b3; // define variables only once outside the loop
 for (int i = lower1; i < lower1 + M; i+= vec_size){

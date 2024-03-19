@@ -3,7 +3,7 @@ from PerfTunerClass import PerfTuner
 
 # this file is run by the user
 # the user has to input the path to the file that he wants to transform
-# he can choose how many snipptes should be tried in how many trials
+# he can choose how many snippets should be tried in how many trials
 
 print("----------------------------------------------------------------------------------------")
 print("Welcome to PerfTuner!")
@@ -14,7 +14,7 @@ print("You need to prepare two files in the same directory:")
 print("function.cc - containing the C++ function you want to optimize.")
 print("     The function needs to be called function(...) and should have no return value.")
 print("main.cc - containing a test environment for function(...).")
-print("     This will be used to check wether the transformation was successfulll.")
+print("     This will be used to check wether the transformation was successful.")
 print("")
 
 # get the path to the directory of the used files

@@ -16,7 +16,7 @@ def main():
     STATISTICS = []
     RESULT = []
 
-    # lists to store problem names and corresponding runtimes for plotting
+    # lists to store problem names and corresponding run times for plotting
     problem_names_for_plot = []
     runtimes_cc_for_plot = []
 
@@ -282,7 +282,7 @@ def main():
     plt.savefig(files_path)
     plt.show()
 
-    # table3 - snippet succes rate
+    # table3 - snippet success rate
     # extract snippet numbers from STATISTICS
     snippet_numbers = [statistics[1][2] for statistics in STATISTICS]
 
